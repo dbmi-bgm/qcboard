@@ -1,0 +1,12 @@
+PASS	Basic Statistics	HG002.hs37d5.60x.1.addrg.bam
+PASS	Per base sequence quality	HG002.hs37d5.60x.1.addrg.bam
+PASS	Per tile sequence quality	HG002.hs37d5.60x.1.addrg.bam
+PASS	Per sequence quality scores	HG002.hs37d5.60x.1.addrg.bam
+PASS	Per base sequence content	HG002.hs37d5.60x.1.addrg.bam
+WARN	Per sequence GC content	HG002.hs37d5.60x.1.addrg.bam
+PASS	Per base N content	HG002.hs37d5.60x.1.addrg.bam
+PASS	Sequence Length Distribution	HG002.hs37d5.60x.1.addrg.bam
+WARN	Sequence Duplication Levels	HG002.hs37d5.60x.1.addrg.bam
+PASS	Overrepresented sequences	HG002.hs37d5.60x.1.addrg.bam
+PASS	Adapter Content	HG002.hs37d5.60x.1.addrg.bam
+PASS	Kmer Content	HG002.hs37d5.60x.1.addrg.bam
