@@ -41,7 +41,7 @@
       padding-left: 10px;
       margin-right: auto;
       margin-left: auto;
-      margin-top: 140px;
+      margin-top: 60px;
     }
 
     .bg-dark {
@@ -106,8 +106,8 @@
      border-bottom: 0px solid #CCCCCC;
     }
 
-    #tabgenstat th{
-      width:170px;
+    #tabgenstat th {
+      width: 170px;
       padding-bottom: 3px;
       padding-top: 3px;
       padding-right: 15px;
@@ -116,7 +116,7 @@
       font-size: 1rem;
     }
 
-    #tabgenstat td{
+    #tabgenstat td {
       padding-bottom: 3px;
       padding-top: 3px;
       font-size: 0.925rem;
@@ -125,20 +125,29 @@
     h3 {
       margin-top: 40px;
       margin-bottom: 1rem;
+      font-size: 1.75rem
     }
 
-    #tabchromcov td{ text-align: right; padding-right: 17px; font-size: 0.925rem; }
-    #tabchromcov th{ text-align: right; border-bottom: 2px solid #000000; color:#000000; font-weight: normal; font-size: 1rem; }
-    #tabchromcov tr, td, th { padding-top: 5px; margin-top: 5px; padding-bottom: 5px; margin-bottom: 5px; }
-    /* #tabchromcov tbody tr:nth-child(odd) td,.tab2 tbody tr:nth-child(odd) { background-color:#f9f9f9; } */
-    /* #tabchromcov tbody tr:hover td,.tab2 tbody tr:hover th{ background-color:#f3dce1; } */
+    #tabchromcov td { border-bottom: 1px solid #dddddd; padding: 11px; font-size: 0.925rem; text-align: center;}
+    #tabchromcov th {
+                  padding: 13px;
+                  font-size: 1rem;
+                  background-color: #2C6088;
+                  color: #ffffff;
+                  font-weight: normal;
+                  text-align: center;
+                }
+
+    table {
+      border-collapse: collapse;
+    }
 
     .overflow-hidden { overflow: hidden; }
     </style>
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <a class="navbar-brand" href="#">QC Board</a>
   </nav>
 
@@ -171,6 +180,8 @@
             <table id="tabchromcov">
               ##SAMTOOLS.CHROM_COVERAGE_TAB##
             </table>
+
+          </br></br>
 
           </td>
         </tr>
