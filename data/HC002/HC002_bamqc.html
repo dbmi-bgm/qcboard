@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>BAM QC</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/product/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900,300i,400i,600i" rel="stylesheet"/>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+
+    <style>
+    :root { font-size: 16px }
+
+    body{
+      font-family: "Source Sans Pro", sans-serif;
+    }
+
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    .container {
+      width: 100%;
+      padding-right: 10px;
+      padding-left: 10px;
+      margin-right: auto;
+      margin-left: auto;
+      margin-top: 140px;
+    }
+
+    .bg-dark {
+      background-color: #20445E!important;
+    }
+
+    .navbar{
+      height: 81px; /* Just an example height*/
+      align-items: center;
+      padding: 0;
+    }
+
+    .navbar-nav {
+      padding-left: 2rem;
+    }
+
+    .navbar-brand {
+        display: inline-block;
+        padding-left: 50px;
+        margin-right: 1rem;
+        font-size: 1.7rem;
+        line-height: inherit;
+        white-space: nowrap;
+        font-weight: lighter;
+        padding-top: 0;
+        padding-bottom: 0;
+        cursor: default;
+    }
+
+    .navbar-dark .navbar-brand {
+        color: #D3DADF;
+    }
+
+    .navbar-dark .navbar-nav .active>.nav-link {
+        color: #D3DADF;
+    }
+
+    .navbar-dark .navbar-nav .active>.nav-link:hover {
+        color: #fff;
+    }
+
+    .navbar-expand-md .navbar-nav .nav-link {
+        padding-right: .5rem;
+        padding-left: .5rem;
+        padding-top: .7rem;
+        font-size: 1.075rem;
+    }
+
+    .navbar-dark .navbar-brand:focus, .navbar-dark .navbar-brand:hover {
+        color: #D3DADF;
+    }
+
+    .dropdown-menu {
+      padding: 0.1rem 0;
+    }
+
+    #tabgenstat tr, td, th {
+     padding-top: 5px;
+     margin-top: 5px;
+     padding-bottom: 5px;
+     margin-bottom: 5px;
+     border-bottom: 0px solid #CCCCCC;
+    }
+
+    #tabgenstat th{
+      width:170px;
+      padding-bottom: 3px;
+      padding-top: 3px;
+      padding-right: 15px;
+      text-align: right;
+      font-weight: normal;
+      font-size: 1rem;
+    }
+
+    #tabgenstat td{
+      padding-bottom: 3px;
+      padding-top: 3px;
+      font-size: 0.925rem;
+    }
+
+    h3 {
+      margin-top: 40px;
+      margin-bottom: 1rem;
+    }
+
+    #tabchromcov td{ text-align: right; padding-right: 17px; font-size: 0.925rem; }
+    #tabchromcov th{ text-align: right; border-bottom: 2px solid #000000; color:#000000; font-weight: normal; font-size: 1rem; }
+    #tabchromcov tr, td, th { padding-top: 5px; margin-top: 5px; padding-bottom: 5px; margin-bottom: 5px; }
+    /* #tabchromcov tbody tr:nth-child(odd) td,.tab2 tbody tr:nth-child(odd) { background-color:#f9f9f9; } */
+    /* #tabchromcov tbody tr:hover td,.tab2 tbody tr:hover th{ background-color:#f3dce1; } */
+
+    .overflow-hidden { overflow: hidden; }
+    </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="#">QC Board</a>
+  </nav>
+
+  <a name="general_statistics"></a>
+  <div class="container position-relative text-left">
+    <div>
+      <h3>General Statistics</h3>
+      <table id="tabgenstat">
+        <tr>
+          <th>BAM file</th>
+          <td>data/HC002/HG002.hs37d5.60x.1.addrg.bam</td>
+        </tr>
+        <tr><th>Distinct Total Reads</th><td>1,327,219,598 (1st of pair: 663,609,799 , 2nd of pair: 663,609,799) <a href="#" class="badge badge-light">picard.cmm</a></td></tr>
+        <tr><th>Read Length</th><td>148 bp <a href="#" class="badge badge-light">fastqc</a></td></td></tr>
+        <tr><th>Overal Coverage</th><td>59.2X <a href="#" class="badge badge-light">samtools.idxstats</a><br>57.2X (chr1~22,X,Y,MT) <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
+        <tr><th>Overal Mapping Fraction</th><td>95.749% (mapped reads: 1,255,425,755, unmapped reads: 55,739,144) <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
+        <tr><th>% GC</th><td>39% <a href="#" class="badge badge-light">fastqc</a></td></tr>
+        <tr><th>% Duplication</th><td>68.109% <a href="#" class="badge badge-light">fastqc</a></td></tr>
+        <tr><th>Estimated Biological Gender</th><td>Male (Y/X read ratio: 7.62) <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
+        <!-- <tr><th>reference sequence</th><td>GRCh37d5</td></tr> -->
+      </table>
+
+    <a name="chromosomal_coverage"></a>
+      <h3>Chromosomal Coverage</h3>
+      <table class="tab1">
+        <!-- <tr><th>Overal Coverage</th><td>59.8X <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr> -->
+        <tr>
+          <td colspan=2>
+
+            <table id="tabchromcov">
+              <tr><th>CHROM</th><th>LEN</th><th>MAAPED</th><th>UNMAPPED</th><th>TOTAL</th><th>MAPPED_RATIO</th><th>COVERAGE</th></tr><tr><td>1</td><td>249,250,621</td><td>96,732,575</td><td>863,363</td><td>97,595,938</td><td>99.12%</td><td>57.4</td></tr><tr><td>2</td><td>243,199,373</td><td>103,338,472</td><td>835,704</td><td>104,174,176</td><td>99.2%</td><td>62.9</td></tr><tr><td>3</td><td>198,022,430</td><td>85,278,366</td><td>669,300</td><td>85,947,666</td><td>99.22%</td><td>63.7</td></tr><tr><td>4</td><td>191,154,276</td><td>83,051,753</td><td>642,576</td><td>83,694,329</td><td>99.23%</td><td>64.3</td></tr><tr><td>5</td><td>180,915,260</td><td>77,387,439</td><td>603,639</td><td>77,991,078</td><td>99.23%</td><td>63.3</td></tr><tr><td>6</td><td>171,115,067</td><td>74,422,590</td><td>621,195</td><td>75,043,785</td><td>99.17%</td><td>64.4</td></tr><tr><td>7</td><td>159,138,663</td><td>66,291,052</td><td>572,939</td><td>66,863,991</td><td>99.14%</td><td>61.7</td></tr><tr><td>8</td><td>146,364,022</td><td>62,316,825</td><td>546,384</td><td>62,863,209</td><td>99.13%</td><td>63.0</td></tr><tr><td>9</td><td>141,213,431</td><td>48,591,028</td><td>425,021</td><td>49,016,049</td><td>99.13%</td><td>50.9</td></tr><tr><td>10</td><td>135,534,747</td><td>55,392,468</td><td>488,028</td><td>55,880,496</td><td>99.13%</td><td>60.5</td></tr><tr><td>11</td><td>135,006,516</td><td>56,051,968</td><td>477,270</td><td>56,529,238</td><td>99.16%</td><td>61.4</td></tr><tr><td>12</td><td>133,851,895</td><td>56,741,419</td><td>498,612</td><td>57,240,031</td><td>99.13%</td><td>62.7</td></tr><tr><td>13</td><td>115,169,878</td><td>41,857,622</td><td>324,395</td><td>42,182,017</td><td>99.23%</td><td>53.8</td></tr><tr><td>14</td><td>107,349,540</td><td>38,621,548</td><td>327,879</td><td>38,949,427</td><td>99.16%</td><td>53.2</td></tr><tr><td>15</td><td>102,531,392</td><td>34,267,376</td><td>306,470</td><td>34,573,846</td><td>99.11%</td><td>49.5</td></tr><tr><td>16</td><td>90,354,753</td><td>34,876,480</td><td>423,350</td><td>35,299,830</td><td>98.8%</td><td>57.1</td></tr><tr><td>17</td><td>81,195,210</td><td>32,268,141</td><td>370,114</td><td>32,638,255</td><td>98.87%</td><td>58.8</td></tr><tr><td>18</td><td>78,077,248</td><td>32,314,301</td><td>260,198</td><td>32,574,499</td><td>99.2%</td><td>61.3</td></tr><tr><td>19</td><td>59,128,983</td><td>21,897,183</td><td>308,663</td><td>22,205,846</td><td>98.61%</td><td>54.8</td></tr><tr><td>20</td><td>63,025,520</td><td>24,525,211</td><td>235,610</td><td>24,760,821</td><td>99.05%</td><td>57.6</td></tr><tr><td>21</td><td>48,129,895</td><td>15,955,237</td><td>152,500</td><td>16,107,737</td><td>99.05%</td><td>49.1</td></tr><tr><td>22</td><td>51,304,566</td><td>13,681,813</td><td>161,206</td><td>13,843,019</td><td>98.84%</td><td>39.5</td></tr><tr><td>X</td><td>155,270,560</td><td>32,811,340</td><td>264,797</td><td>33,076,137</td><td>99.2%</td><td>31.3</td></tr><tr><td>Y</td><td>59,373,566</td><td>4,283,927</td><td>54,866</td><td>4,338,793</td><td>98.74%</td><td>10.7</td></tr><tr><td>MT</td><td>16,569</td><td>3,293,301</td><td>39,237</td><td>3,332,538</td><td>98.82%</td><td>29416.9</td></tr>
+            </table>
+
+          </td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script>window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
+  </body>
+</html>
