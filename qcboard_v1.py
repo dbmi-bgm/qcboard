@@ -16,6 +16,10 @@ FIELDLIST_BAMQC['PICARD.CMM'] = ['NO_PAIR','NO_PAIR_1','NO_PAIR_2']
 FIELDLIST_BAMQC['FASTQC'] = ['SEQUENCE_LENGTH','GC_PER','DUPLICATION_PER']
 FIELDLIST_BAMQC['SAMTOOLS'] = ['NO_MAPPED_READS','NO_UNMAPPED_READS','MAPPED_RATIO','XY_RATIO','EST_GENDER','CHROM_COVERAGE_TAB','COVERAGE_ALL_CHROM','COVERAGE_MAIN_CHROM']
 
+
+CHROMCOVTAB_HEADERMAP = {'CHROM':'Chromosome','LEN':'Length','MAAPED':'# Mapped','UNMAPPED':'# Unmapped','TOTAL':'Total','MAPPED_RATIO':'Mapped Ratio','COVERAGE':'Coverage'}
+ 
+
 def run_cmd(scmd, flag=False):
     if flag:
         print (scmd)
@@ -162,6 +166,7 @@ class QCBoard():
         pass
 
     def get_samtools_idxstats(self):
+        global CHROMCOVTAB_HEADERMAP
         flag = ""
         chromcovtab = ""
 
@@ -173,7 +178,10 @@ class QCBoard():
 
             if flag == "chrcov":
                 if arr[0] == "CHROM":
-                    chromcovtab += '<tr><th>'+'</th><th>'.join(arr)+'</th></tr>'
+                    chromcovtab += '<tr>'
+                    for a1 in arr:
+                        chromcovtab += '<th>'+CHROMCOVTAB_HEADERMAP[a1]+'</th>'
+                    chromcovtab += '</tr>'
                 else:
                     chromcovtab += '<tr><td>'+'</td><td>'.join(arr)+'</td></tr>'
                 if arr[0] == "MT":
