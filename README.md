@@ -22,6 +22,11 @@ pip install qcboard
 python qcboard_v1.py -bam [BAM] -out [OUT TITLE]
 ```
 
+### Test run
+```
+python qcboard_v1.py -bam data/HC002/HG002.hs37d5.60x.1.addrg.bam -out data/HC002/HC002_bamqc
+```
+
 
 ### Pre-executed commands
 ```
