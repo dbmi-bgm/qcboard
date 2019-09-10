@@ -111,7 +111,7 @@
     }
 
     #tabgenstat th {
-      width: 170px;
+      width: 240px;
       padding-bottom: 3px;
       padding-top: 3px;
       padding-right: 15px;
@@ -125,6 +125,8 @@
       padding-top: 3px;
       font-size: 0.925rem;
     }
+
+    
 
     h3 {
       margin-top: 40px;
@@ -175,6 +177,23 @@
       </table>
 
     <a name="chromosomal_coverage"></a>
+      <h3>FASTQC summary</h3>
+      <table id="tabgenstat">
+        <tr><th>Basic Statistics</th><td>##FASTQC.Basic_Statistics##</td></tr>
+        <tr><th>Per base sequence quality</th><td>##FASTQC.Per_base_sequence_quality##</td></tr>
+        <tr><th>Per tile sequence quality</th><td>##FASTQC.Per_tile_sequence_quality##</td></tr>
+        <tr><th>Per sequence quality scores</th><td>##FASTQC.Per_sequence_quality_scores##</td></tr>
+        <tr><th>Per base sequence content</th><td>##FASTQC.Per_base_sequence_content##</td></tr>
+        <tr><th>Per sequence GC content</th><td>##FASTQC.Per_sequence_GC_content##</td></tr>
+        <tr><th>Per base N content</th><td>##FASTQC.Per_base_N_content##</td></tr>
+        <tr><th>Sequence Length Distribution</th><td>##FASTQC.Sequence_Length_Distribution##</td></tr>
+        <tr><th>Sequence Duplication Levels</th><td>##FASTQC.Sequence_Duplication_Levels##</td></tr>
+        <tr><th>Overrepresented sequences</th><td>##FASTQC.Overrepresented_sequences##</td></tr>
+        <tr><th>Adapter Content</th><td>##FASTQC.Adapter_Content##</td></tr>
+        <tr><th>Kmer Content</th><td>##FASTQC.Kmer_Content##</td></tr>
+      </table>
+
+    <a name="chromosomal_coverage"></a>
       <h3>Chromosomal Coverage</h3>
       <table class="tab1">
         <!-- <tr><th>Overal Coverage</th><td>59.8X <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr> -->
@@ -182,7 +201,7 @@
           <td colspan=2>
 
             <table id="tabchromcov">
-              ##SAMTOOLS.CHROM_COVERAGE_TAB##
+              ##SAMTOOLS.CHROM_COVERAGE_TAB_HTML##
             </table>
 
           </br></br>
@@ -190,6 +209,8 @@
           </td>
         </tr>
       </table>
+
+    
 
     </div>
   </div>

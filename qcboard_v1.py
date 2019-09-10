@@ -8,17 +8,28 @@ import sys
 import os
 import argparse
 
-VERSION = "0.1"
-VERSION_DATE = "19.09.05"
+VERSION = "0.1.2"
+VERSION_DATE = "19.09.10"
 
 FIELDLIST_BAMQC = {}
 FIELDLIST_BAMQC['PICARD.CMM'] = ['NO_PAIR','NO_PAIR_1','NO_PAIR_2']
 FIELDLIST_BAMQC['FASTQC'] = ['SEQUENCE_LENGTH','GC_PER','DUPLICATION_PER']
+FIELDLIST_BAMQC['FASTQC'].append('Basic_Statistics')
+FIELDLIST_BAMQC['FASTQC'].append('Per_base_sequence_quality')
+FIELDLIST_BAMQC['FASTQC'].append('Per_tile_sequence_quality')
+FIELDLIST_BAMQC['FASTQC'].append('Per_sequence_quality_scores')
+FIELDLIST_BAMQC['FASTQC'].append('Per_base_sequence_content')
+FIELDLIST_BAMQC['FASTQC'].append('Per_sequence_GC_content')
+FIELDLIST_BAMQC['FASTQC'].append('Per_base_N_content')
+FIELDLIST_BAMQC['FASTQC'].append('Sequence_Length_Distribution')
+FIELDLIST_BAMQC['FASTQC'].append('Sequence_Duplication_Levels')
+FIELDLIST_BAMQC['FASTQC'].append('Overrepresented_sequences')
+FIELDLIST_BAMQC['FASTQC'].append('Adapter_Content')
+FIELDLIST_BAMQC['FASTQC'].append('Kmer_Content')
+
 FIELDLIST_BAMQC['SAMTOOLS'] = ['NO_MAPPED_READS','NO_UNMAPPED_READS','MAPPED_RATIO','XY_RATIO','EST_GENDER','CHROM_COVERAGE_TAB','COVERAGE_ALL_CHROM','COVERAGE_MAIN_CHROM']
-
-
 CHROMCOVTAB_HEADERMAP = {'CHROM':'Chromosome','LEN':'Length','MAAPED':'# Mapped','UNMAPPED':'# Unmapped','TOTAL':'Total','MAPPED_RATIO':'Mapped Ratio','COVERAGE':'Coverage'}
- 
+
 
 def run_cmd(scmd, flag=False):
     if flag:
@@ -103,9 +114,11 @@ class QCBoard():
         if self.opt['out'].endswith('.html'):
             self.out_html = self.opt['out']
             self.out_json = self.opt['out'][:-5] + '.json'
+            self.out_tsv = self.opt['out'][:-5] + '.tsv'
         else:
             self.out_html = self.opt['out'] + '.html'
             self.out_json = self.opt['out'] + '.json'
+            self.out_tsv = self.opt['out'] + '.tsv'
 
     def set_refeq_from_ucsc(self, pos1):
         spos = pos1['g_spos']-self.opt['margin'] - 500
@@ -149,14 +162,36 @@ class QCBoard():
         for k1 in FIELDLIST_BAMQC.keys():
             if len(self.qcstat[k1].keys()) > 0:
                 for k2 in FIELDLIST_BAMQC[k1]:
+                    print (k2)
+                    if k2 == 'CHROM_COVERAGE_TAB':
+                        k2 = 'CHROM_COVERAGE_TAB_HTML'
                     if type(self.qcstat[k1][k2]) == type(1) or type(self.qcstat[k1][k2]) == type(1.1):
                         v1 = comma(self.qcstat[k1][k2])
                     else:
                         v1 = self.qcstat[k1][k2]
+
+                    if k1 == "FASTQC":
+                        v1 = v1.replace('PASS','<span class="badge badge-success">PASS</span>')
+                        v1 = v1.replace('WARN','<span class="badge badge-warning">WARN</span>')
+                        v1 = v1.replace('FAIL','<span class="badge badge-danger">FAIL</span>')
+                        
                     cont = cont.replace('##'+k1+'.'+k2+'##', v1)
 
         fileSave(self.out_html, cont, 'w')
         print ('Saved '+self.out_html)
+
+    def save_tsv(self):
+        cont = ""
+        for k1 in FIELDLIST_BAMQC.keys():
+            if len(self.qcstat[k1].keys()) > 0:
+                for k2 in FIELDLIST_BAMQC[k1]:
+                    if type(self.qcstat[k1][k2]) == type(1) or type(self.qcstat[k1][k2]) == type(1.1):
+                        v1 = comma(self.qcstat[k1][k2])
+                    else:
+                        v1 = self.qcstat[k1][k2]
+                    cont += k1+'.'+k2+'\t' +  v1 + '\n'
+        fileSave(self.out_tsv, cont, 'w')
+        print ('Saved '+self.out_tsv)
 
 
     def mk_run_script(self):
@@ -168,6 +203,7 @@ class QCBoard():
     def get_samtools_idxstats(self):
         global CHROMCOVTAB_HEADERMAP
         flag = ""
+        chromcovtab_html = ""
         chromcovtab = ""
 
         for line in open(self.infile['samtools.idxstats']):
@@ -178,12 +214,17 @@ class QCBoard():
 
             if flag == "chrcov":
                 if arr[0] == "CHROM":
-                    chromcovtab += '<tr>'
+                    chromcovtab_html += '<tr>'
                     for a1 in arr:
-                        chromcovtab += '<th>'+CHROMCOVTAB_HEADERMAP[a1]+'</th>'
-                    chromcovtab += '</tr>'
+                        chromcovtab_html += '<th>'+CHROMCOVTAB_HEADERMAP[a1]+'</th>'
+                        if a1 != 'CHROM':
+                            chromcovtab += ','
+                        chromcovtab += CHROMCOVTAB_HEADERMAP[a1]
+                    chromcovtab_html += '</tr>'
+                    chromcovtab += '|'
                 else:
-                    chromcovtab += '<tr><td>'+'</td><td>'.join(arr)+'</td></tr>'
+                    chromcovtab_html += '<tr><td>'+'</td><td>'.join(arr)+'</td></tr>'
+                    chromcovtab += ','.join(arr) + '|'
                 if arr[0] == "MT":
                     flag = ""
             
@@ -210,8 +251,9 @@ class QCBoard():
                     self.qcstat['SAMTOOLS']['XY_RATIO'] = line.replace("X/Y RATIO:","").strip()
                 if line[:len("EXT. GENDER:")] == "EXT. GENDER:":
                     self.qcstat['SAMTOOLS']['EST_GENDER'] = line.replace("EXT. GENDER:","").strip()
-            print (arr)
+            # print (arr)
 
+        self.qcstat['SAMTOOLS']['CHROM_COVERAGE_TAB_HTML'] = chromcovtab_html
         self.qcstat['SAMTOOLS']['CHROM_COVERAGE_TAB'] = chromcovtab
         self.qcstat['SAMTOOLS']['MAPPED_RATIO'] = round(100*int(self.qcstat['SAMTOOLS']['NO_MAPPED_READS'].replace(',','')) / (int(self.qcstat['SAMTOOLS']['NO_MAPPED_READS'].replace(',','')) + int(self.qcstat['SAMTOOLS']['NO_UNMAPPED_READS'].replace(',',''))), 3)
 
@@ -228,7 +270,8 @@ class QCBoard():
                     self.qcstat['PICARD.CMM']['NO_PAIR'] = int(arr[1])
 
     def get_fastqc(self):
-        cmd = "unzip -f " + self.infile['fastqc'] + " -d " + '/'.join(self.infile['fastqc'].split('/')[:-1])
+        # cmd = "unzip -f " + self.infile['fastqc'] + " -d " + '/'.join(self.infile['fastqc'].split('/')[:-1])
+        cmd = "unzip " + self.infile['fastqc'] + " -d " + '/'.join(self.infile['fastqc'].split('/')[:-1])
         run_cmd(cmd)
         print (self.infile['fastqc'][:-4] + '/fastqc_data.txt')
         for line in open(self.infile['fastqc'][:-4] + '/fastqc_data.txt'):
@@ -238,13 +281,19 @@ class QCBoard():
                 self.qcstat['FASTQC']['GC_PER'] = line.split('\t')[1].strip()
             if line[:len('#Total Deduplicated Percentage')] == '#Total Deduplicated Percentage':
                 self.qcstat['FASTQC']['DUPLICATION_PER'] = str(round(float(line.split('\t')[1].strip()),3))
+
+        print (self.infile['fastqc'][:-4] + '/summary.txt')
+        for line in open(self.infile['fastqc'][:-4] + '/summary.txt'):
+            line = line.strip()
+            arr = line.split('\t')
+            self.qcstat['FASTQC'][arr[1].strip().replace(' ','_')] = arr[0].strip()
             
     def run(self):
         self.get_samtools_idxstats()
         self.get_picard_cmm()
         self.get_fastqc()
         self.save_html()
-        
+        self.save_tsv()
 
 
 if __name__ == "__main__":

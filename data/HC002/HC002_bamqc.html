@@ -111,7 +111,7 @@
     }
 
     #tabgenstat th {
-      width: 170px;
+      width: 240px;
       padding-bottom: 3px;
       padding-top: 3px;
       padding-right: 15px;
@@ -125,6 +125,8 @@
       padding-top: 3px;
       font-size: 0.925rem;
     }
+
+    
 
     h3 {
       margin-top: 40px;
@@ -175,6 +177,23 @@
       </table>
 
     <a name="chromosomal_coverage"></a>
+      <h3>FASTQC summary</h3>
+      <table id="tabgenstat">
+        <tr><th>Basic Statistics</th><td><span class="badge badge-success">PASS</span></td></tr>
+        <tr><th>Per base sequence quality</th><td><span class="badge badge-success">PASS</span></td></tr>
+        <tr><th>Per tile sequence quality</th><td><span class="badge badge-success">PASS</span></td></tr>
+        <tr><th>Per sequence quality scores</th><td><span class="badge badge-success">PASS</span></td></tr>
+        <tr><th>Per base sequence content</th><td><span class="badge badge-success">PASS</span></td></tr>
+        <tr><th>Per sequence GC content</th><td><span class="badge badge-warning">WARN</span></td></tr>
+        <tr><th>Per base N content</th><td><span class="badge badge-success">PASS</span></td></tr>
+        <tr><th>Sequence Length Distribution</th><td><span class="badge badge-success">PASS</span></td></tr>
+        <tr><th>Sequence Duplication Levels</th><td><span class="badge badge-warning">WARN</span></td></tr>
+        <tr><th>Overrepresented sequences</th><td><span class="badge badge-success">PASS</span></td></tr>
+        <tr><th>Adapter Content</th><td><span class="badge badge-success">PASS</span></td></tr>
+        <tr><th>Kmer Content</th><td><span class="badge badge-success">PASS</span></td></tr>
+      </table>
+
+    <a name="chromosomal_coverage"></a>
       <h3>Chromosomal Coverage</h3>
       <table class="tab1">
         <!-- <tr><th>Overal Coverage</th><td>59.8X <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr> -->
@@ -190,6 +209,8 @@
           </td>
         </tr>
       </table>
+
+    
 
     </div>
   </div>
