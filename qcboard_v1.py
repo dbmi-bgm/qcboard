@@ -13,21 +13,22 @@ VERSION_DATE = "19.09.10"
 
 FIELDLIST_BAMQC = {}
 FIELDLIST_BAMQC['PICARD.CMM'] = ['NO_PAIR','NO_PAIR_1','NO_PAIR_2']
-FIELDLIST_BAMQC['FASTQC'] = ['SEQUENCE_LENGTH','GC_PER','DUPLICATION_PER']
-FIELDLIST_BAMQC['FASTQC'].append('Basic_Statistics')
-FIELDLIST_BAMQC['FASTQC'].append('Per_base_sequence_quality')
-FIELDLIST_BAMQC['FASTQC'].append('Per_tile_sequence_quality')
-FIELDLIST_BAMQC['FASTQC'].append('Per_sequence_quality_scores')
-FIELDLIST_BAMQC['FASTQC'].append('Per_base_sequence_content')
-FIELDLIST_BAMQC['FASTQC'].append('Per_sequence_GC_content')
-FIELDLIST_BAMQC['FASTQC'].append('Per_base_N_content')
-FIELDLIST_BAMQC['FASTQC'].append('Sequence_Length_Distribution')
-FIELDLIST_BAMQC['FASTQC'].append('Sequence_Duplication_Levels')
-FIELDLIST_BAMQC['FASTQC'].append('Overrepresented_sequences')
-FIELDLIST_BAMQC['FASTQC'].append('Adapter_Content')
-FIELDLIST_BAMQC['FASTQC'].append('Kmer_Content')
+FIELDLIST_BAMQC['FASTQC'] = ['GC_PER','DUPLICATION_PER']
 
-FIELDLIST_BAMQC['SAMTOOLS'] = ['NO_MAPPED_READS','NO_UNMAPPED_READS','MAPPED_RATIO','XY_RATIO','EST_GENDER','CHROM_COVERAGE_TAB','COVERAGE_ALL_CHROM','COVERAGE_MAIN_CHROM']
+# FIELDLIST_BAMQC['FASTQC'].append('Basic_Statistics')
+# FIELDLIST_BAMQC['FASTQC'].append('Per_base_sequence_quality')
+# FIELDLIST_BAMQC['FASTQC'].append('Per_tile_sequence_quality')
+# FIELDLIST_BAMQC['FASTQC'].append('Per_sequence_quality_scores')
+# FIELDLIST_BAMQC['FASTQC'].append('Per_base_sequence_content')
+# FIELDLIST_BAMQC['FASTQC'].append('Per_sequence_GC_content')
+# FIELDLIST_BAMQC['FASTQC'].append('Per_base_N_content')
+# FIELDLIST_BAMQC['FASTQC'].append('Sequence_Length_Distribution')
+# FIELDLIST_BAMQC['FASTQC'].append('Sequence_Duplication_Levels')
+# FIELDLIST_BAMQC['FASTQC'].append('Overrepresented_sequences')
+# FIELDLIST_BAMQC['FASTQC'].append('Adapter_Content')
+# FIELDLIST_BAMQC['FASTQC'].append('Kmer_Content')
+
+FIELDLIST_BAMQC['SAMTOOLS'] = ['SEQUENCE_LENGTH','NO_MAPPED_READS','NO_UNMAPPED_READS','MAPPED_RATIO','XY_RATIO','EST_GENDER','CHROM_COVERAGE_TAB','COVERAGE_ALL_CHROM','COVERAGE_MAIN_CHROM']
 CHROMCOVTAB_HEADERMAP = {'CHROM':'Chromosome','LEN':'Length','MAAPED':'# Mapped','UNMAPPED':'# Unmapped','TOTAL':'Total','MAPPED_RATIO':'Mapped Ratio','COVERAGE':'Coverage'}
 
 
@@ -71,6 +72,8 @@ def get_options():
     
     parser.add_argument('-bam', dest='bam', default='', help='bam file')
     parser.add_argument('-out', dest='out', default='', help='title of output file')
+    parser.add_argument('--per_gc', dest='per_gc', default='', help='percentage of GC metric from FASTQC')
+    parser.add_argument('--per_dup', dest='per_dup', default='', help='percentage of duplication metric from FASTQC')
     parser.add_argument('-temp', dest='temp', default='qcboard_bamqc.html', help='template html file')
     parser.add_argument('-silence', dest='silence', action="store_true", default=False, help='don\'t print any log.')
     parser.add_argument('-debug', dest='debug', action="store_true", default=False, help='turn on the debugging mode')
@@ -101,6 +104,8 @@ class QCBoard():
         self.qcstat['SAMTOOLS'] = {}
         self.qcstat['PICARD.CMM'] = {}
         self.qcstat['FASTQC'] = {}
+        self.qcstat['FASTQC']['GC_PER'] = self.opt['per_gc']
+        self.qcstat['FASTQC']['DUPLICATION_PER'] = self.opt['per_dup']
         
     def set_infilenames(self):
         self.infile = {}
@@ -162,7 +167,6 @@ class QCBoard():
         for k1 in FIELDLIST_BAMQC.keys():
             if len(self.qcstat[k1].keys()) > 0:
                 for k2 in FIELDLIST_BAMQC[k1]:
-                    print (k2)
                     if k2 == 'CHROM_COVERAGE_TAB':
                         k2 = 'CHROM_COVERAGE_TAB_HTML'
                     if type(self.qcstat[k1][k2]) == type(1) or type(self.qcstat[k1][k2]) == type(1.1):
@@ -242,6 +246,8 @@ class QCBoard():
                     self.qcstat['SAMTOOLS']['NO_MAPPED_READS'] = line.replace("MAPPED:","").strip()
                 if line[:len("UNMAPPED:")] == "UNMAPPED:":
                     self.qcstat['SAMTOOLS']['NO_UNMAPPED_READS'] = line.replace("UNMAPPED:","").strip()
+                if line[:len("READ_LEN:")] == "READ_LEN:":
+                    self.qcstat['SAMTOOLS']['SEQUENCE_LENGTH'] = line.replace("READ_LEN:","").strip()
 
             if flag == "MAIN":
                 if line[:len("COVERAGE:")] == "COVERAGE:":
@@ -291,7 +297,7 @@ class QCBoard():
     def run(self):
         self.get_samtools_idxstats()
         self.get_picard_cmm()
-        self.get_fastqc()
+        # self.get_fastqc()
         self.save_html()
         self.save_tsv()
 
