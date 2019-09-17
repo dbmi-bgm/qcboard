@@ -217,7 +217,7 @@ class QCBoard():
                     if k == 'CHROM_COVERAGE_TAB_HTML':
                         pass
                     elif k == 'CHROM_COVERAGE_TAB':
-                        d.setdefault('per_chromosome_coverage', [])
+                        d.setdefault('Per chromosome coverage', [])
                         for chr_str in v.split('|')[1:-1]:
                             chr, len, map, unmap, tot, map_ratio, coverage = chr_str.split(':')
                             d_chr = {'Chromosome': self.str_num(chr), 'Chromosome length': self.str_num(len), 'Num mapped reads': self.str_num(map),
