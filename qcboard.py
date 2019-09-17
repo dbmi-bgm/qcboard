@@ -196,6 +196,19 @@ class QCBoard():
                 return subst_x
 
     def save_json(self):
+        conv_dict = {
+        'EST_GENDER': 'Estimated gender',
+        'COVERAGE_ALL_CHROM': 'Coverage all chromosomes',
+        'COVERAGE_MAIN_CHROM': 'Coverage main chromosomes',
+        'SEQUENCE_LENGTH': 'Sequence length',
+        'XY_RATIO': 'XY ratio',
+        'NO_UNMAPPED_READS':'Num unmapped reads',
+        'NO_MAPPED_READS': 'Num mapped reads',
+        'NO_PAIR': 'Num pairs',
+        'NO_PAIR_1': 'Num 1st of pair',
+        'NO_PAIR_2': 'Num 2nd of pair',
+        'MAPPED_RATIO': 'Mapped ratio'
+        }
         d = {}
         for key in self.qcstat:
             if key == 'SAMTOOLS':
@@ -207,22 +220,16 @@ class QCBoard():
                         d.setdefault('per_chromosome_coverage', [])
                         for chr_str in v.split('|')[1:-1]:
                             chr, len, map, unmap, tot, map_ratio, coverage = chr_str.split(':')
-                            d_chr = {'chromosome': self.str_num(chr), 'length': self.str_num(len), 'no_mapped': self.str_num(map),
-                                     'no_unmapped': self.str_num(unmap), 'total': self.str_num(tot),
-                                     'mapped_ratio': self.str_num(map_ratio), 'coverage': self.str_num(coverage)
+                            d_chr = {'Chromosome': self.str_num(chr), 'Chromosome length': self.str_num(len), 'Num mapped reads': self.str_num(map),
+                                     'Num unmapped reads': self.str_num(unmap), 'Total reads': self.str_num(tot),
+                                     'Mapped ratio': self.str_num(map_ratio), 'Coverage': self.str_num(coverage)
                                     }
-                            d['per_chromosome_coverage'].append(d_chr)
+                            d['Per chromosome coverage'].append(d_chr)
                     else:
-                        if k == 'EST_GENDER':
-                            k = 'ESTIMATED_GENDER'
-                        elif k == 'COVERAGE_ALL_CHROM':
-                            k = 'COVERAGE_ALL_CHROMOSOMES'
-                        elif k == 'COVERAGE_MAIN_CHROM':
-                            k = 'COVERAGE_MAIN_CHROMOSOMES'
-                        d.setdefault(k.lower(), self.str_num(v))
+                        d.setdefault(conv_dict[k], self.str_num(v))
             elif key == 'PICARD.CMM':
                 for k, v in self.qcstat['PICARD.CMM'].items():
-                    d.setdefault(k.lower(), self.str_num(v))
+                    d.setdefault(conv_dict[k], self.str_num(v))
 
         # writing json
         with open(self.out_json, 'w') as outfile:
