@@ -9,11 +9,11 @@ import os
 import argparse
 import json
 
-VERSION = "0.1.2"
-VERSION_DATE = "19.09.10"
+VERSION = "0.1.3"
+VERSION_DATE = "2019.09.25"
 
 FIELDLIST_BAMQC = {}
-FIELDLIST_BAMQC['PICARD.CMM'] = ['NO_PAIR','NO_PAIR_1','NO_PAIR_2']
+FIELDLIST_BAMQC['PICARD.CMM'] = ['NO_PAIR','NO_PAIR_1','NO_PAIR_2','MEDIAN_INSERT_SIZE','MIN_INSERT_SIZE','MAX_INSERT_SIZE','MEAN_INSERT_SIZE','STANDARD_DEVIATION']
 FIELDLIST_BAMQC['FASTQC'] = ['GC_PER','DUPLICATION_PER']
 
 # FIELDLIST_BAMQC['FASTQC'].append('Basic_Statistics')
@@ -31,7 +31,6 @@ FIELDLIST_BAMQC['FASTQC'] = ['GC_PER','DUPLICATION_PER']
 
 FIELDLIST_BAMQC['SAMTOOLS'] = ['SEQUENCE_LENGTH','NO_MAPPED_READS','NO_UNMAPPED_READS','MAPPED_RATIO','XY_RATIO','EST_GENDER','CHROM_COVERAGE_TAB','COVERAGE_ALL_CHROM','COVERAGE_MAIN_CHROM']
 CHROMCOVTAB_HEADERMAP = {'CHROM':'Chromosome','LEN':'Length','MAAPED':'Num Mapped','UNMAPPED':'Num Unmapped','TOTAL':'Total','MAPPED_RATIO':'Mapped Ratio','COVERAGE':'Coverage'}
-
 
 def run_cmd(scmd, flag=False):
     if flag:
@@ -113,6 +112,8 @@ class QCBoard():
         # self.infile['samtools.idxstats'] = self.opt['bam'] + '.idxstats'
         self.infile['samtools.idxstats'] = self.opt['bam'] + '.stat'
         self.infile['picard.cmm.alignment_summary_metrics'] = self.opt['bam'] + '.cmm.alignment_summary_metrics'
+        self.infile['picard.cmm.quality_by_cycle_metrics'] = self.opt['bam'] + '.cmm.quality_by_cycle_metrics'
+        self.infile['picard.cmm.insert_size_metrics'] = self.opt['bam'] + '.cmm.insert_size_metrics'
         self.infile['fastqc'] = self.opt['bam'][:-4] + '_fastqc.zip'
 
 
@@ -207,6 +208,12 @@ class QCBoard():
         'NO_PAIR': 'Num pairs',
         'NO_PAIR_1': 'Num 1st of pair',
         'NO_PAIR_2': 'Num 2nd of pair',
+        'MEDIAN_INSERT_SIZE': 'Median insertion size',
+        'MEDIAN_ABSOLUTE_DEVIATION': 'Median absolute deviation of insertion size distribution',
+        'MEAN_INSERT_SIZE': 'Mean insertion size',
+        'STANDARD_DEVIATION': 'Standard deviation of insertion size',
+        'MIN_INSERT_SIZE': 'Minimum insertion size',
+        'MAX_INSERT_SIZE': 'Maximum insertion size',
         'MAPPED_RATIO': 'Mapped ratio'
         }
         d = {}
@@ -312,6 +319,28 @@ class QCBoard():
                     self.qcstat['PICARD.CMM']['NO_PAIR_2'] = int(arr[1])
                 if arr[0] == "PAIR":
                     self.qcstat['PICARD.CMM']['NO_PAIR'] = int(arr[1])
+
+        colnames = []
+        for line in open(self.infile['picard.cmm.insert_size_metrics']):
+            if line[0] != '#':
+                arr = line.split('\t')
+                arr[-1] = arr[-1].strip()
+                if len(colnames) > 3:
+                    for k in range(len(colnames)):
+                        if colnames[k] in FIELDLIST_BAMQC['PICARD.CMM']:
+                            if '.' in arr[k]:
+                                try:
+                                    self.qcstat['PICARD.CMM'][colnames[k]] = float(arr[k].strip())
+                                except ValueError:
+                                    self.qcstat['PICARD.CMM'][colnames[k]] = arr[k].strip()
+                            else:
+                                try:
+                                    self.qcstat['PICARD.CMM'][colnames[k]] = int(arr[k])
+                                except ValueError:
+                                    self.qcstat['PICARD.CMM'][colnames[k]] = arr[k].strip()
+                    break
+                if arr[0] == "MEDIAN_INSERT_SIZE":
+                    colnames = arr
 
     def get_fastqc(self):
         # cmd = "unzip -f " + self.infile['fastqc'] + " -d " + '/'.join(self.infile['fastqc'].split('/')[:-1])

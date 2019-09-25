@@ -111,7 +111,7 @@
     }
 
     #tabgenstat th {
-      width: 240px;
+      width: 200px;
       padding-bottom: 3px;
       padding-top: 3px;
       padding-right: 15px;
@@ -125,8 +125,6 @@
       padding-top: 3px;
       font-size: 0.925rem;
     }
-
-    
 
     h3 {
       margin-top: 40px;
@@ -154,7 +152,7 @@
 
 <body>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">QC Board</a>
+    <a class="navbar-brand" href="#">BAM QC Board</a>
   </nav>
 
   <a name="general_statistics"></a>
@@ -164,7 +162,7 @@
       <table id="tabgenstat">
         <tr>
           <th>BAM file</th>
-          <td>data/HC002/HG002.hs37d5.60x.1.addrg.bam</td>
+          <td>data/HG002/HG002.hs37d5.60x.1.addrg.bam</td>
         </tr>
         <tr><th>Distinct Total Reads</th><td>1,327,219,598 (1st of pair: 663,609,799 , 2nd of pair: 663,609,799) <a href="#" class="badge badge-light">picard.cmm</a></td></tr>
         <tr><th>Read Length</th><td>151 bp <a href="#" class="badge badge-light">samtools</a></td></td></tr>
@@ -172,7 +170,13 @@
         <tr><th>Overal Mapping Fraction</th><td>99.953% (mapped reads: 64,975,431, unmapped reads: 30,758) <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
         <!-- <tr><th>% GC</th><td>% <a href="#" class="badge badge-light">fastqc</a></td></tr> -->
         <!-- <tr><th>% Duplication</th><td>% <a href="#" class="badge badge-light">fastqc</a></td></tr> -->
-        <tr><th>Estimated Biological Gender</th><td>Male (Y/X read ratio: 3.06) <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
+        <tr><th>Estimated Gender</th><td>Male (Y/X read ratio: 3.06) <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
+        <tr><th>Insertion size</th><td>
+          median: 556bp <br>
+          mean: 555.879016bp <br>
+          min, max: [109 ~ 243,225,470] <br>
+          std. deviation: 152.621292
+          <a href="https://broadinstitute.github.io/picard/picard-metric-definitions.html#InsertSizeMetrics" class="badge badge-light" target="_blank">picard.cmm</a></td></tr>
         <!-- <tr><th>reference sequence</th><td>GRCh37d5</td></tr> -->
       </table>
 
@@ -201,7 +205,7 @@
           <td colspan=2>
 
             <table id="tabchromcov">
-              <tr><th>Chromosome</th><th>Length</th><th># Mapped</th><th># Unmapped</th><th>Total</th><th>Mapped Ratio</th><th>Coverage</th></tr><tr><td>1</td><td>248,956,422</td><td>5,457,448</td><td>9,237</td><td>5,466,685</td><td>99.83%</td><td>3.3</td></tr><tr><td>2</td><td>242,193,529</td><td>5,291,223</td><td>9,463</td><td>5,300,686</td><td>99.82%</td><td>3.3</td></tr><tr><td>3</td><td>198,295,559</td><td>4,398,998</td><td>7,716</td><td>4,406,714</td><td>99.82%</td><td>3.3</td></tr><tr><td>4</td><td>190,214,555</td><td>4,233,006</td><td>7,493</td><td>4,240,499</td><td>99.82%</td><td>3.4</td></tr><tr><td>5</td><td>181,538,259</td><td>3,903,920</td><td>7,124</td><td>3,911,044</td><td>99.82%</td><td>3.2</td></tr><tr><td>6</td><td>170,805,979</td><td>3,617,731</td><td>6,412</td><td>3,624,143</td><td>99.82%</td><td>3.2</td></tr><tr><td>7</td><td>159,345,973</td><td>3,446,725</td><td>5,968</td><td>3,452,693</td><td>99.83%</td><td>3.3</td></tr><tr><td>8</td><td>145,138,636</td><td>3,150,119</td><td>5,492</td><td>3,155,611</td><td>99.83%</td><td>3.3</td></tr><tr><td>9</td><td>138,394,717</td><td>2,644,731</td><td>4,611</td><td>2,649,342</td><td>99.83%</td><td>2.9</td></tr><tr><td>10</td><td>133,797,422</td><td>2,962,927</td><td>5,193</td><td>2,968,120</td><td>99.83%</td><td>3.3</td></tr><tr><td>11</td><td>135,086,622</td><td>2,877,353</td><td>5,111</td><td>2,882,464</td><td>99.82%</td><td>3.2</td></tr><tr><td>12</td><td>133,275,309</td><td>2,872,244</td><td>4,993</td><td>2,877,237</td><td>99.83%</td><td>3.3</td></tr><tr><td>13</td><td>114,364,328</td><td>2,259,724</td><td>3,986</td><td>2,263,710</td><td>99.82%</td><td>3.0</td></tr><tr><td>14</td><td>107,043,718</td><td>1,897,836</td><td>3,342</td><td>1,901,178</td><td>99.82%</td><td>2.7</td></tr><tr><td>15</td><td>101,991,189</td><td>1,757,663</td><td>3,165</td><td>1,760,828</td><td>99.82%</td><td>2.6</td></tr><tr><td>16</td><td>90,338,345</td><td>2,037,224</td><td>3,526</td><td>2,040,750</td><td>99.83%</td><td>3.4</td></tr><tr><td>17</td><td>83,257,441</td><td>1,723,090</td><td>3,015</td><td>1,726,105</td><td>99.83%</td><td>3.1</td></tr><tr><td>18</td><td>80,373,285</td><td>1,721,005</td><td>3,017</td><td>1,724,022</td><td>99.83%</td><td>3.2</td></tr><tr><td>19</td><td>58,617,616</td><td>1,169,953</td><td>1,935</td><td>1,171,888</td><td>99.83%</td><td>3.0</td></tr><tr><td>20</td><td>64,444,167</td><td>1,432,500</td><td>2,560</td><td>1,435,060</td><td>99.82%</td><td>3.4</td></tr><tr><td>21</td><td>46,709,983</td><td>953,855</td><td>1,815</td><td>955,670</td><td>99.81%</td><td>3.1</td></tr><tr><td>22</td><td>50,818,468</td><td>812,778</td><td>1,417</td><td>814,195</td><td>99.83%</td><td>2.4</td></tr><tr><td>X</td><td>156,040,895</td><td>1,715,394</td><td>3,049</td><td>1,718,443</td><td>99.82%</td><td>1.7</td></tr><tr><td>Y</td><td>57,227,415</td><td>559,638</td><td>1,108</td><td>560,746</td><td>99.8%</td><td>1.5</td></tr><tr><td>M</td><td>16,569</td><td>30,989</td><td>75</td><td>31,064</td><td>99.76%</td><td>282.4</td></tr>
+              <tr><th>Chromosome</th><th>Length</th><th>Num Mapped</th><th>Num Unmapped</th><th>Total</th><th>Mapped Ratio</th><th>Coverage</th></tr><tr><td>1</td><td>248,956,422</td><td>5,457,448</td><td>9,237</td><td>5,466,685</td><td>99.83%</td><td>3.3</td></tr><tr><td>2</td><td>242,193,529</td><td>5,291,223</td><td>9,463</td><td>5,300,686</td><td>99.82%</td><td>3.3</td></tr><tr><td>3</td><td>198,295,559</td><td>4,398,998</td><td>7,716</td><td>4,406,714</td><td>99.82%</td><td>3.3</td></tr><tr><td>4</td><td>190,214,555</td><td>4,233,006</td><td>7,493</td><td>4,240,499</td><td>99.82%</td><td>3.4</td></tr><tr><td>5</td><td>181,538,259</td><td>3,903,920</td><td>7,124</td><td>3,911,044</td><td>99.82%</td><td>3.2</td></tr><tr><td>6</td><td>170,805,979</td><td>3,617,731</td><td>6,412</td><td>3,624,143</td><td>99.82%</td><td>3.2</td></tr><tr><td>7</td><td>159,345,973</td><td>3,446,725</td><td>5,968</td><td>3,452,693</td><td>99.83%</td><td>3.3</td></tr><tr><td>8</td><td>145,138,636</td><td>3,150,119</td><td>5,492</td><td>3,155,611</td><td>99.83%</td><td>3.3</td></tr><tr><td>9</td><td>138,394,717</td><td>2,644,731</td><td>4,611</td><td>2,649,342</td><td>99.83%</td><td>2.9</td></tr><tr><td>10</td><td>133,797,422</td><td>2,962,927</td><td>5,193</td><td>2,968,120</td><td>99.83%</td><td>3.3</td></tr><tr><td>11</td><td>135,086,622</td><td>2,877,353</td><td>5,111</td><td>2,882,464</td><td>99.82%</td><td>3.2</td></tr><tr><td>12</td><td>133,275,309</td><td>2,872,244</td><td>4,993</td><td>2,877,237</td><td>99.83%</td><td>3.3</td></tr><tr><td>13</td><td>114,364,328</td><td>2,259,724</td><td>3,986</td><td>2,263,710</td><td>99.82%</td><td>3.0</td></tr><tr><td>14</td><td>107,043,718</td><td>1,897,836</td><td>3,342</td><td>1,901,178</td><td>99.82%</td><td>2.7</td></tr><tr><td>15</td><td>101,991,189</td><td>1,757,663</td><td>3,165</td><td>1,760,828</td><td>99.82%</td><td>2.6</td></tr><tr><td>16</td><td>90,338,345</td><td>2,037,224</td><td>3,526</td><td>2,040,750</td><td>99.83%</td><td>3.4</td></tr><tr><td>17</td><td>83,257,441</td><td>1,723,090</td><td>3,015</td><td>1,726,105</td><td>99.83%</td><td>3.1</td></tr><tr><td>18</td><td>80,373,285</td><td>1,721,005</td><td>3,017</td><td>1,724,022</td><td>99.83%</td><td>3.2</td></tr><tr><td>19</td><td>58,617,616</td><td>1,169,953</td><td>1,935</td><td>1,171,888</td><td>99.83%</td><td>3.0</td></tr><tr><td>20</td><td>64,444,167</td><td>1,432,500</td><td>2,560</td><td>1,435,060</td><td>99.82%</td><td>3.4</td></tr><tr><td>21</td><td>46,709,983</td><td>953,855</td><td>1,815</td><td>955,670</td><td>99.81%</td><td>3.1</td></tr><tr><td>22</td><td>50,818,468</td><td>812,778</td><td>1,417</td><td>814,195</td><td>99.83%</td><td>2.4</td></tr><tr><td>X</td><td>156,040,895</td><td>1,715,394</td><td>3,049</td><td>1,718,443</td><td>99.82%</td><td>1.7</td></tr><tr><td>Y</td><td>57,227,415</td><td>559,638</td><td>1,108</td><td>560,746</td><td>99.8%</td><td>1.5</td></tr><tr><td>M</td><td>16,569</td><td>30,989</td><td>75</td><td>31,064</td><td>99.76%</td><td>282.4</td></tr>
             </table>
 
           </br></br>
@@ -209,8 +213,6 @@
           </td>
         </tr>
       </table>
-
-    
 
     </div>
   </div>

@@ -171,6 +171,12 @@
         <!-- <tr><th>% GC</th><td>##FASTQC.GC_PER##% <a href="#" class="badge badge-light">fastqc</a></td></tr> -->
         <!-- <tr><th>% Duplication</th><td>##FASTQC.DUPLICATION_PER##% <a href="#" class="badge badge-light">fastqc</a></td></tr> -->
         <tr><th>Estimated Gender</th><td>##SAMTOOLS.EST_GENDER## (Y/X read ratio: ##SAMTOOLS.XY_RATIO##) <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
+        <tr><th>Insertion size</th><td>
+          median: ##PICARD.CMM.MEDIAN_INSERT_SIZE##bp <br>
+          mean: ##PICARD.CMM.MEAN_INSERT_SIZE##bp <br>
+          min, max: [##PICARD.CMM.MIN_INSERT_SIZE## ~ ##PICARD.CMM.MAX_INSERT_SIZE##] <br>
+          std. deviation: ##PICARD.CMM.STANDARD_DEVIATION##
+          <a href="https://broadinstitute.github.io/picard/picard-metric-definitions.html#InsertSizeMetrics" class="badge badge-light" target="_blank">picard.cmm</a></td></tr>
         <!-- <tr><th>reference sequence</th><td>GRCh37d5</td></tr> -->
       </table>
 

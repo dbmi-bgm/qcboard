@@ -19,12 +19,12 @@ pip install qcboard
 -->
 ## Usage of BAMQC
 ```
-python qcboard_v1.py -bam [BAM] -out [OUT TITLE]
+python qcboard.py -bam [BAM] -out [OUT TITLE]
 ```
 
 ### Test run
 ```
-python qcboard_v1.py -bam data/HC002/HG002.hs37d5.60x.1.addrg.bam -out data/HC002/HC002_bamqc
+python qcboard.py -bam data/HG002/HG002.hs37d5.60x.1.addrg.bam -out data/HG002/HG002_bamqc
 ```
 
 
