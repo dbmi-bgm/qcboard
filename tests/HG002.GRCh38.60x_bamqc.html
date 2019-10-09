@@ -162,22 +162,22 @@
       <table id="tabgenstat">
         <tr>
           <th>BAM file</th>
-          <td>##BAMFILE##</td>
+          <td>./data/Ashkenazim/HG002.GRCh38.60x.bam</td>
         </tr>
-        <tr><th>Distinct Total Reads</th><td>##PICARD.CMM.NO_PAIR## (1st of pair: ##PICARD.CMM.NO_PAIR_1## , 2nd of pair: ##PICARD.CMM.NO_PAIR_2##) <a href="#" class="badge badge-light">picard.cmm</a></td></tr>
-        <tr><th>Read Length</th><td>##SAMTOOLS.SEQUENCE_LENGTH## bp <a href="#" class="badge badge-light">samtools</a></td></td></tr>
-        <tr><th>Overal Coverage</th><td>##SAMTOOLS.COVERAGE_ALL_CHROM##X (all genomic region)<br>##SAMTOOLS.COVERAGE_MAIN_CHROM##X (chr1~22,X,Y,MT) <br>##SAMTOOLS.ADJUSTED_COVERAGE_MAIN_CHROM##X (mappable region in chr1~22,X,Y,MT)<a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
-        <tr><th>Overal Mapping Fraction</th><td>##SAMTOOLS.MAPPED_RATIO##% (mapped reads: ##SAMTOOLS.NO_MAPPED_READS##, unmapped reads: ##SAMTOOLS.NO_UNMAPPED_READS##) <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
-        <!-- <tr><th>% GC</th><td>##FASTQC.GC_PER##% <a href="#" class="badge badge-light">fastqc</a></td></tr> -->
-        <!-- <tr><th>% Duplication</th><td>##FASTQC.DUPLICATION_PER##% <a href="#" class="badge badge-light">fastqc</a></td></tr> -->
-        <tr><th>Estimated Gender</th><td>##SAMTOOLS.EST_GENDER## (Y/X read ratio: ##SAMTOOLS.XY_RATIO##) <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
+        <tr><th>Distinct Total Reads</th><td>1,327,219,598 (1st of pair: 663,609,799 , 2nd of pair: 663,609,799) <a href="#" class="badge badge-light">picard.cmm</a></td></tr>
+        <tr><th>Read Length</th><td>148 bp <a href="#" class="badge badge-light">samtools</a></td></td></tr>
+        <tr><th>Overal Coverage</th><td>58.8X (all genomic region)<br>58.4X (chr1~22,X,Y,MT) <br>62.5X (mappable region in chr1~22,X,Y,MT)<a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
+        <tr><th>Overal Mapping Fraction</th><td>94.107% (mapped reads: 1,233,859,871, unmapped reads: 77,270,534) <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
+        <!-- <tr><th>% GC</th><td>% <a href="#" class="badge badge-light">fastqc</a></td></tr> -->
+        <!-- <tr><th>% Duplication</th><td>% <a href="#" class="badge badge-light">fastqc</a></td></tr> -->
+        <tr><th>Estimated Gender</th><td>Male (Y/X read ratio: 7.22) <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
         <tr><th>Insertion size</th><td>
-          median: ##PICARD.CMM.MEDIAN_INSERT_SIZE## bp <br>
-          mean: ##PICARD.CMM.MEAN_INSERT_SIZE## bp <br>
-          <!-- min, max: [##PICARD.CMM.MIN_INSERT_SIZE## ~ ##PICARD.CMM.MAX_INSERT_SIZE##] <br> -->
-          std. deviation: ##PICARD.CMM.STANDARD_DEVIATION##
+          median: 556 bp <br>
+          mean: 555.74514 bp <br>
+          <!-- min, max: [106 ~ 242,978,732] <br> -->
+          std. deviation: 152.247448
           <a href="https://broadinstitute.github.io/picard/picard-metric-definitions.html#InsertSizeMetrics" class="badge badge-light" target="_blank">picard.cmm</a></td></tr>
-        <tr><th>reference sequence</th><td>##SAMTOOLS.SEQVERSION##</td></tr>
+        <tr><th>reference sequence</th><td>GRCh38</td></tr>
       </table>
 
     <!-- <a name="chromosomal_coverage"></a>
@@ -205,7 +205,7 @@
           <td colspan=2>
 
             <table id="tabchromcov">
-              ##SAMTOOLS.CHROM_COVERAGE_TAB_HTML##
+              <tr><th>Chromosome</th><th>Length</th><th>Num Mapped</th><th>Num Unmapped</th><th>Total</th><th>Mapped Ratio</th><th>Coverage</th><th>Adjusted Coverage</th></tr><tr><td>1</td><td>248,956,422</td><td>103,285,652</td><td>1,614,408</td><td>104,900,060</td><td>98.46%</td><td>61.4</td><td>67.0</td></tr><tr><td>2</td><td>242,193,529</td><td>104,216,617</td><td>912,882</td><td>105,129,499</td><td>99.13%</td><td>63.7</td><td>64.5</td></tr><tr><td>3</td><td>198,295,559</td><td>87,260,824</td><td>1,383,626</td><td>88,644,450</td><td>98.44%</td><td>65.1</td><td>65.4</td></tr><tr><td>4</td><td>190,214,555</td><td>83,520,036</td><td>806,886</td><td>84,326,922</td><td>99.04%</td><td>65.0</td><td>65.4</td></tr><tr><td>5</td><td>181,538,259</td><td>77,728,745</td><td>699,025</td><td>78,427,770</td><td>99.11%</td><td>63.4</td><td>64.8</td></tr><tr><td>6</td><td>170,805,979</td><td>74,492,248</td><td>618,466</td><td>75,110,714</td><td>99.18%</td><td>64.5</td><td>65.2</td></tr><tr><td>7</td><td>159,345,973</td><td>67,020,438</td><td>598,407</td><td>67,618,845</td><td>99.12%</td><td>62.2</td><td>63.1</td></tr><tr><td>8</td><td>145,138,636</td><td>61,815,890</td><td>501,984</td><td>62,317,874</td><td>99.19%</td><td>63.0</td><td>63.8</td></tr><tr><td>9</td><td>138,394,717</td><td>49,530,391</td><td>453,308</td><td>49,983,699</td><td>99.09%</td><td>53.0</td><td>61.6</td></tr><tr><td>10</td><td>133,797,422</td><td>56,826,448</td><td>594,129</td><td>57,420,577</td><td>98.97%</td><td>62.9</td><td>63.7</td></tr><tr><td>11</td><td>135,086,622</td><td>56,555,575</td><td>507,254</td><td>57,062,829</td><td>99.11%</td><td>62.0</td><td>62.5</td></tr><tr><td>12</td><td>133,275,309</td><td>57,272,717</td><td>520,311</td><td>57,793,028</td><td>99.1%</td><td>63.6</td><td>64.0</td></tr><tr><td>13</td><td>114,364,328</td><td>43,593,974</td><td>470,128</td><td>44,064,102</td><td>98.93%</td><td>56.4</td><td>66.0</td></tr><tr><td>14</td><td>107,043,718</td><td>38,616,351</td><td>330,927</td><td>38,947,278</td><td>99.15%</td><td>53.4</td><td>64.7</td></tr><tr><td>15</td><td>101,991,189</td><td>34,410,707</td><td>320,052</td><td>34,730,759</td><td>99.08%</td><td>49.9</td><td>61.9</td></tr><tr><td>16</td><td>90,338,345</td><td>35,382,015</td><td>630,541</td><td>36,012,556</td><td>98.25%</td><td>58.0</td><td>65.5</td></tr><tr><td>17</td><td>83,257,441</td><td>33,594,479</td><td>720,288</td><td>34,314,767</td><td>97.9%</td><td>59.7</td><td>62.6</td></tr><tr><td>18</td><td>80,373,285</td><td>32,989,157</td><td>309,077</td><td>33,298,234</td><td>99.07%</td><td>60.7</td><td>61.9</td></tr><tr><td>19</td><td>58,617,616</td><td>22,009,012</td><td>316,932</td><td>22,325,944</td><td>98.58%</td><td>55.6</td><td>58.6</td></tr><tr><td>20</td><td>64,444,167</td><td>26,248,820</td><td>372,550</td><td>26,621,370</td><td>98.6%</td><td>60.3</td><td>61.8</td></tr><tr><td>21</td><td>46,709,983</td><td>16,550,457</td><td>184,906</td><td>16,735,363</td><td>98.9%</td><td>52.4</td><td>68.5</td></tr><tr><td>22</td><td>50,818,468</td><td>14,823,748</td><td>191,182</td><td>15,014,930</td><td>98.73%</td><td>43.2</td><td>59.8</td></tr><tr><td>X</td><td>156,040,895</td><td>32,843,586</td><td>266,084</td><td>33,109,670</td><td>99.2%</td><td>31.2</td><td>32.2</td></tr><tr><td>Y</td><td>57,227,415</td><td>4,491,379</td><td>96,328</td><td>4,587,707</td><td>97.9%</td><td>11.6</td><td>36.3</td></tr><tr><td>M</td><td>16,569</td><td>3,293,927</td><td>38,345</td><td>3,332,272</td><td>98.85%</td><td>29422.5</td><td>29422.5</td></tr>
             </table>
 
           </br></br>

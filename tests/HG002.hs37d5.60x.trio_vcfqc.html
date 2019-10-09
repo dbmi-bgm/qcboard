@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <title>BAM QC</title>
+    <title>Faimly VCF QC</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/product/">
 
@@ -80,7 +80,7 @@
     }
 
     .navbar-dark .navbar-nav .active>.nav-link {
-        color: #D3DADF;
+        color: #ffffff;
     }
 
     .navbar-dark .navbar-nav .active>.nav-link:hover {
@@ -95,7 +95,7 @@
     }
 
     .navbar-dark .navbar-brand:focus, .navbar-dark .navbar-brand:hover {
-        color: #D3DADF;
+        color: #ffffff;
     }
 
     .dropdown-menu {
@@ -132,8 +132,22 @@
       font-size: 1.75rem
     }
 
+    #nav-link{color:#ffffff;}
+    #nav-link:hover{color:#aaaaff;}
+
     #tabchromcov td { border-bottom: 1px solid #dddddd; padding: 11px; font-size: 0.925rem; text-align: center;}
     #tabchromcov th {
+                  padding: 13px;
+                  font-size: 1rem;
+                  background-color: #2C6088;
+                  color: #ffffff;
+                  font-weight: normal;
+                  text-align: center;
+                }
+    #tabchromcov tbody tr:hover td,.tab2 tbody tr:hover th{background-color:#e6f7ff;}
+
+    #tabibd td { border-bottom: 1px solid #dddddd; border-right: 1px solid #dddddd; padding: 11px; font-size: 0.925rem; text-align: center;}
+    #tabibd th {
                   padding: 13px;
                   font-size: 1rem;
                   background-color: #2C6088;
@@ -152,7 +166,18 @@
 
 <body>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">BAM QC Board</a>
+    <a class="navbar-brand" href="#">Faimly VCF QC Board</a>
+    <ul class="nav">
+    <li class="nav-item">
+      <a id="nav-link" class="nav-link" href="./HG002.hs37d5.60x_vcfqc.html" target=_blank>Child</a>
+    </li>
+    <li class="nav-item">
+      <a id="nav-link" class="nav-link" href="./HG003.hs37d5.60x_vcfqc.html" target=_blank>Father</a>
+    </li>
+    <li class="nav-item">
+      <a id="nav-link" class="nav-link" href="./HG004.hs37d5.60x_vcfqc.html" target=_blank>Mother</a>
+    </li>
+  </ul>
   </nav>
 
   <a name="general_statistics"></a>
@@ -160,59 +185,57 @@
     <div class="indent">
       <h3>General Statistics</h3>
       <table id="tabgenstat">
-        <tr>
-          <th>BAM file</th>
-          <td>##BAMFILE##</td>
-        </tr>
-        <tr><th>Distinct Total Reads</th><td>##PICARD.CMM.NO_PAIR## (1st of pair: ##PICARD.CMM.NO_PAIR_1## , 2nd of pair: ##PICARD.CMM.NO_PAIR_2##) <a href="#" class="badge badge-light">picard.cmm</a></td></tr>
-        <tr><th>Read Length</th><td>##SAMTOOLS.SEQUENCE_LENGTH## bp <a href="#" class="badge badge-light">samtools</a></td></td></tr>
-        <tr><th>Overal Coverage</th><td>##SAMTOOLS.COVERAGE_ALL_CHROM##X (all genomic region)<br>##SAMTOOLS.COVERAGE_MAIN_CHROM##X (chr1~22,X,Y,MT) <br>##SAMTOOLS.ADJUSTED_COVERAGE_MAIN_CHROM##X (mappable region in chr1~22,X,Y,MT)<a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
-        <tr><th>Overal Mapping Fraction</th><td>##SAMTOOLS.MAPPED_RATIO##% (mapped reads: ##SAMTOOLS.NO_MAPPED_READS##, unmapped reads: ##SAMTOOLS.NO_UNMAPPED_READS##) <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
-        <!-- <tr><th>% GC</th><td>##FASTQC.GC_PER##% <a href="#" class="badge badge-light">fastqc</a></td></tr> -->
-        <!-- <tr><th>% Duplication</th><td>##FASTQC.DUPLICATION_PER##% <a href="#" class="badge badge-light">fastqc</a></td></tr> -->
-        <tr><th>Estimated Gender</th><td>##SAMTOOLS.EST_GENDER## (Y/X read ratio: ##SAMTOOLS.XY_RATIO##) <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr>
-        <tr><th>Insertion size</th><td>
-          median: ##PICARD.CMM.MEDIAN_INSERT_SIZE## bp <br>
-          mean: ##PICARD.CMM.MEAN_INSERT_SIZE## bp <br>
-          <!-- min, max: [##PICARD.CMM.MIN_INSERT_SIZE## ~ ##PICARD.CMM.MAX_INSERT_SIZE##] <br> -->
-          std. deviation: ##PICARD.CMM.STANDARD_DEVIATION##
-          <a href="https://broadinstitute.github.io/picard/picard-metric-definitions.html#InsertSizeMetrics" class="badge badge-light" target="_blank">picard.cmm</a></td></tr>
-        <tr><th>reference sequence</th><td>##SAMTOOLS.SEQVERSION##</td></tr>
+        <tr><th>VCF file</th><td>
+          [child] data/Ashkenazim/HG002.hs37d5.60x.mnvindelmixed.vqsr.vcf.gz<br>
+          [father] data/Ashkenazim/HG003.hs37d5.60x.mnvindelmixed.vqsr.vcf.gz<br>
+          [mother] data/Ashkenazim/HG004.hs37d5.60x.mnvindelmixed.vqsr.vcf.gz<br>
+        </td></tr>
+        <!-- <tr><th>no. samples</th><td>0</td></tr> -->
+        <tr><th>no. samples</th><td>3</td></tr>
+        
+        <tr><th>Mendelian inheritance error</th><td> 1632 (0.037%) <!-- <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-16-S15-P19/figures/1" target=_blank>link</a> --></td></tr>
+        <tr><th>De novo variants</th><td> 889 (0.02%) <!-- <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-16-S15-P19/figures/1" target=_blank>link</a> --></td></tr>
+            <!-- <tr><th>Het/Hom</th><td>1.6194 <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-16-S15-P19/figures/1" target=_blank>link</a></td></tr> -->
+        
+        
+        <!--FAMILY-->
+        
+              
+        
       </table>
 
-    <!-- <a name="chromosomal_coverage"></a>
-      <h3>FASTQC summary</h3>
-      <table id="tabgenstat">
-        <tr><th>Basic Statistics</th><td>##FASTQC.Basic_Statistics##</td></tr>
-        <tr><th>Per base sequence quality</th><td>##FASTQC.Per_base_sequence_quality##</td></tr>
-        <tr><th>Per tile sequence quality</th><td>##FASTQC.Per_tile_sequence_quality##</td></tr>
-        <tr><th>Per sequence quality scores</th><td>##FASTQC.Per_sequence_quality_scores##</td></tr>
-        <tr><th>Per base sequence content</th><td>##FASTQC.Per_base_sequence_content##</td></tr>
-        <tr><th>Per sequence GC content</th><td>##FASTQC.Per_sequence_GC_content##</td></tr>
-        <tr><th>Per base N content</th><td>##FASTQC.Per_base_N_content##</td></tr>
-        <tr><th>Sequence Length Distribution</th><td>##FASTQC.Sequence_Length_Distribution##</td></tr>
-        <tr><th>Sequence Duplication Levels</th><td>##FASTQC.Sequence_Duplication_Levels##</td></tr>
-        <tr><th>Overrepresented sequences</th><td>##FASTQC.Overrepresented_sequences##</td></tr>
-        <tr><th>Adapter Content</th><td>##FASTQC.Adapter_Content##</td></tr>
-        <tr><th>Kmer Content</th><td>##FASTQC.Kmer_Content##</td></tr>
-      </table> -->
+<!---------------------------------------------------------------------------------------------------------------->
 
-    <a name="chromosomal_coverage"></a>
-      <h3>Chromosomal Coverage</h3>
-      <table class="tab1">
-        <!-- <tr><th>Overal Coverage</th><td>59.8X <a href="#" class="badge badge-light">samtools.idxstats</a></td></tr> -->
-        <tr>
-          <td colspan=2>
+<!---------------------------------------------------------------------------------------------------------------->
+<a name='ibd_table'></a>
+<h3>IBD table</h3>
+<table id="tabibd"><thead>
+<tr><th>Sample1</th><th>HG002</th><th>HG003</th><th>HG004</th></tr>
+</thead><tbody>
+<tr><th>HG002</th><td></td><td><span class="badge badge-success">0.5053</span></td><td><span class="badge badge-success">0.5070</span></td></tr>
+<tr><th>HG003</th><td><span class="badge badge-success">0.5053</span></td><td></td><td><span class="badge badge-light">0.1330</span></td></tr>
+<tr><th>HG004</th><td><span class="badge badge-success">0.5070</span></td><td><span class="badge badge-light">0.1330</span></td><td></td></tr>
+</tbody>
+</table>
+<span>PI_HAT = P(IBD=2)+0.5*P(IBD=1)</span>
 
-            <table id="tabchromcov">
-              ##SAMTOOLS.CHROM_COVERAGE_TAB_HTML##
-            </table>
 
-          </br></br>
 
-          </td>
-        </tr>
-      </table>
+<!---------------------------------------------------------------------------------------------------------------->
+<!-- <a name='ibd_table'></a>
+<h3>Mendelian inheritance errors</h3>
+<table id="tabibd"><thead>
+<tr><th>Sample1</th><th>Total</th><th>PASS</th><th>HG004</th></tr>
+</thead><tbody>
+<tr><td>Mendelian</th><td></td><td>0.5053</td><td>0.5070</td></tr>
+<tr><td>Mendelian error</th><td>0.5053</td><td></td><td>0.1330</td></tr>
+<tr><td>HG004</th><td>0.5070</td><td>0.1330</td><td></td></tr>
+</tbody>
+</table>
+<span>PI_HAT = P(IBD=2)+0.5*P(IBD=1)</span> -->
+
+
+
 
     </div>
   </div>

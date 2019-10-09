@@ -11,6 +11,8 @@
 * bedtools (current version)
 * fastqc
 * unzip
+* pytabix
+
 
 <!--## Installation
 ```
@@ -144,3 +146,26 @@ qcboard -vcf [VCF] -out [OUT]
 ```
 -->
 
+
+
+
+
+## Usage of VCFQC
+```
+python qcboard.py vcfqc -vcf [VCF1.SNV] [VCF1.INDEL] [VCF2.SNV] [VCF2.INDEL] [VCF3.SNV] [VCF3.INDEL] -out [OUT TITLE] -ped [PEDIGREE FILE]
+python qcboard.py vcfqc -vcf [VCF1] [VCF2] [VCF3] -out [OUT TITLE] -ped [PEDIGREE FILE]
+python qcboard.py vcfqc -vcf [VCF1] -out [OUT TITLE]
+```
+
+
+#### SNPEff
+```
+java -Xmx4g -jar /home/mk446/BiO/Install/snpEff/snpEff.jar eff -v [sequence version (GRCh37.75/GRCh38.86)] [VCF] > [VCF]_eff.vcf;
+```
+* input: VCF file
+
+
+#### PLINK IBD
+```
+
+```
