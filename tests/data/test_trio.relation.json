@@ -1,0 +1,15 @@
+[
+  {
+  	"sample": "NA12877_sample",
+   	"relation": "Father",
+   	"gender": "M"
+  },{
+  	"sample": "NA12878_sample",
+   	"relation": "Mother",
+   	"gender": "F"
+  },{
+  	"sample": "NA12879_sample",
+   	"relation": "Proband",
+   	"gender": "F"
+  }
+]

@@ -16,6 +16,24 @@ def percentage(n1, n2):
     else:
         rst = comma(round(int(n1.replace(',',''))/int(n2.replace(',',''))*100,1))
     return rst
+
+def convert_chrom(chrom):
+    return chrom.replace('chr','').replace('MT','M')
+
+def opt2cmd(opt, qcboard_filepath):
+    cmd = "python " + qcboard_filepath 
+    for k1 in opt.keys():
+        
+        if k1 == 'subcommand':
+            cmd +=  " " + opt['subcommand']
+        elif type(opt[k1]) == type([]):
+            cmd += " -" + k1 + " " + " ".join(opt[k1])
+        elif type(opt[k1]) == type(False):
+            if opt[k1]:
+                cmd += " -" + k1
+        else:
+            cmd += " -" + k1 + " " + str(opt[k1])
+    return cmd
     
 
 def add_comma_with_dict(d1):
@@ -76,9 +94,9 @@ def gzopen(fname):
         f1 = open(fname)
     return f1
 
-def savejson(out, d):
+def savejson(out, d, sort=False):
     with open(out, 'w') as outfile:
-        json.dump(d, outfile)
+        json.dump(d, outfile, indent=2, sort_keys=sort)
 
 def loadjson(json_file):
     data = {}
@@ -140,32 +158,46 @@ def get_adjusted_refalt(ref,alt,gt):
         adj_gt = "0/1"
     return (adj_ref, adj_alt, adj_gt)
 
-def get_vartype(ref, alt):
-    vartype = ''
-    if ref == '*':
-        vartype = 'INS'
-    elif alt == '*':
-        vartype = 'DEL'
-    elif len(ref) == 1 and len(alt) == 1:
-        vartype = 'SNV'
-    elif len(ref)==1 and ',' in alt:
-        altaa = alt.split(',')
-        flag = True
-        for j in range(len(altaa)):
-            if len(altaa[j]) > 1:
-                flag = False
-        if flag:
-            vartype = 'SNV'
-        else:
+def get_vartype(ref, altstr):
+    vartypelist = []
+
+    for alt in altstr.split(','):
+        vartype = ''
+        if ref == '*':
             vartype = 'INS'
-    elif len(ref) < len(alt) and not ',' in alt:
-        vartype = 'INS'
-    elif len(ref) > len(alt) and not ',' in alt:
-        vartype = 'DEL'
-    elif len(ref) == len(alt):
-        vartype = 'MNV'
-    else:
+        elif alt == '*':
+            vartype = 'DEL'
+        elif len(ref) == 1 and len(alt) == 1:
+            vartype = 'SNV'
+        elif len(ref)==1 and ',' in alt:
+            altaa = alt.split(',')
+            flag = True
+            for j in range(len(altaa)):
+                if len(altaa[j]) > 1:
+                    flag = False
+            if flag:
+                vartype = 'SNV'
+            else:
+                vartype = 'INS'
+        elif len(ref) < len(alt):
+            vartype = 'INS'
+        elif len(ref) > len(alt):
+            vartype = 'DEL'
+        elif len(ref) == len(alt):
+            vartype = 'MNV'
+        else:
+            vartype = 'MIXED'
+        vartypelist.append(vartype)
+
+    is_mixed = False
+    if len(vartypelist) > 1:
+        for idx in range(1, len(vartypelist)):
+            if vartypelist[idx-1] != vartypelist[idx]:
+                is_mixed = True
+    if is_mixed:
         vartype = 'MIXED'
+    else:
+        vartype = vartypelist[0]
     return vartype
 
 TIMAP={}
@@ -196,5 +228,6 @@ COMPLSUBSTITUTION['A_T'] = 'T_A'
 COMPLSUBSTITUTION['A_G'] = 'T_C'
 COMPLSUBSTITUTION['A_C'] = 'T_G'
 def get_substitution(ref, alt):
-    return (COMPLSUBSTITUTION[ref+'_'+alt])
+    global COMPLSUBSTITUTION
+    return COMPLSUBSTITUTION[ref+'_'+alt]
 

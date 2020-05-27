@@ -13,7 +13,7 @@ class QCBoardVCF():
 
     def __init__(self, opt):
         self.opt = opt
-        self.vcflist = self.opt['vcflist']
+        self.vcflist = self.opt['vcf']
         self.set_outfilenames()
         self.set_infilenames()
 
@@ -46,45 +46,47 @@ class QCBoardVCF():
 
     def save_json(self):
         conv_dict = {
-        'EST_GENDER': 'Estimated gender',
-        'COVERAGE_ALL_CHROM': 'Coverage all chromosomes',
-        'COVERAGE_MAIN_CHROM': 'Coverage main chromosomes',
-        'SEQUENCE_LENGTH': 'Sequence length',
-        'XY_RATIO': 'XY ratio',
-        'NO_UNMAPPED_READS':'Num unmapped reads',
-        'NO_MAPPED_READS': 'Num mapped reads',
-        'NO_PAIR': 'Num pairs',
-        'NO_PAIR_1': 'Num 1st of pair',
-        'NO_PAIR_2': 'Num 2nd of pair',
-        'MEDIAN_INSERT_SIZE': 'Median insertion size',
-        'MEDIAN_ABSOLUTE_DEVIATION': 'Median absolute deviation of insertion size distribution',
-        'MEAN_INSERT_SIZE': 'Mean insertion size',
-        'STANDARD_DEVIATION': 'Standard deviation of insertion size',
-        'MIN_INSERT_SIZE': 'Minimum insertion size',
-        'MAX_INSERT_SIZE': 'Maximum insertion size',
-        'MAPPED_RATIO': 'Mapped ratio'
+            'EST_GENDER': 'Estimated gender',
+            'COVERAGE_ALL_CHROM': 'Coverage all chromosomes',
+            'COVERAGE_MAIN_CHROM': 'Coverage main chromosomes',
+            'SEQUENCE_LENGTH': 'Sequence length',
+            'XY_RATIO': 'XY ratio',
+            'NO_UNMAPPED_READS':'Num unmapped reads',
+            'NO_MAPPED_READS': 'Num mapped reads',
+            'NO_PAIR': 'Num pairs',
+            'NO_PAIR_1': 'Num 1st of pair',
+            'NO_PAIR_2': 'Num 2nd of pair',
+            'MEDIAN_INSERT_SIZE': 'Median insertion size',
+            'MEDIAN_ABSOLUTE_DEVIATION': 'Median absolute deviation of insertion size distribution',
+            'MEAN_INSERT_SIZE': 'Mean insertion size',
+            'STANDARD_DEVIATION': 'Standard deviation of insertion size',
+            'MIN_INSERT_SIZE': 'Minimum insertion size',
+            'MAX_INSERT_SIZE': 'Maximum insertion size',
+            'MAPPED_RATIO': 'Mapped ratio'
         }
         d = {}
-        for key in self.qcstat:
-            if key == 'SAMTOOLS':
-                # parsing samtools info
-                for k, v in self.qcstat['SAMTOOLS'].items():
-                    if k == 'CHROM_COVERAGE_TAB_HTML':
-                        pass
-                    elif k == 'CHROM_COVERAGE_TAB':
-                        d.setdefault('Per chromosome coverage', [])
-                        for chr_str in v.split('|')[1:-1]:
-                            chr, len, map, unmap, tot, map_ratio, coverage = chr_str.split(':')
-                            d_chr = {'Chromosome': self.str_num(chr), 'Chromosome length': self.str_num(len), 'Num mapped reads': self.str_num(map),
-                                        'Num unmapped reads': self.str_num(unmap), 'Total reads': self.str_num(tot),
-                                        'Mapped ratio': self.str_num(map_ratio), 'Coverage': self.str_num(coverage)
-                                    }
-                            d['Per chromosome coverage'].append(d_chr)
-                    else:
-                        d.setdefault(conv_dict[k], self.str_num(v))
-            elif key == 'PICARD.CMM':
-                for k, v in self.qcstat['PICARD.CMM'].items():
-                    d.setdefault(conv_dict[k], self.str_num(v))
+        # for key in self.qcstat:
+        #     if key == 'SAMTOOLS':
+        #         # parsing samtools info
+        #         for k, v in self.qcstat['SAMTOOLS'].items():
+        #             if k == 'CHROM_COVERAGE_TAB_HTML':
+        #                 pass
+        #             elif k == 'CHROM_COVERAGE_TAB':
+        #                 d.setdefault('Per chromosome coverage', [])
+        #                 for chr_str in v.split('|')[1:-1]:
+        #                     chr, len, map, unmap, tot, map_ratio, coverage = chr_str.split(':')
+        #                     d_chr = {'Chromosome': self.str_num(chr), 'Chromosome length': self.str_num(len), 'Num mapped reads': self.str_num(map),
+        #                                 'Num unmapped reads': self.str_num(unmap), 'Total reads': self.str_num(tot),
+        #                                 'Mapped ratio': self.str_num(map_ratio), 'Coverage': self.str_num(coverage)
+        #                             }
+        #                     d['Per chromosome coverage'].append(d_chr)
+        #             else:
+        #                 d.setdefault(conv_dict[k], self.str_num(v))
+        #     elif key == 'PICARD.CMM':
+        #         for k, v in self.qcstat['PICARD.CMM'].items():
+        #             d.setdefault(conv_dict[k], self.str_num(v))
+
+        d = self.qcstat
 
         qcutil.savejson(self.out_json, d)
         print ('Saved '+self.out_json)
@@ -101,16 +103,15 @@ class QCBoardVCF():
             self.qcstat[vcf] = qcutil.loadjson(self.infile[vcf]['vcfstat'])
 
     def get_family_stat(self):
-        if not qcutil.is_exist(self.out_famstat):
-            qs = famvcfstat.QCBoardFamilyVCFSTAT(self.opt)
-            qs.run()
+        qs = famvcfstat.QCBoardFamilyVCFSTAT(self.opt)
+        qs.run()
         self.famqcstat = qcutil.loadjson(self.out_famstat)
 
     def run(self):
         self.get_vcfstat()
-        if self.opt['ped'] != '':
+        if self.opt['relation'] != '':
             self.get_family_stat()
             
         self.save_html()
-        # self.save_json()
+        self.save_json()
         

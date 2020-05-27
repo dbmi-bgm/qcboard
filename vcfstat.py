@@ -109,10 +109,10 @@ class QCBoardVCFSTAT():
 
                 stat['VARTYPE'][vartype+vt] += 1
 
-                # print (vartype, arr[:5])
                 if vartype=='SNV':
                     titv = qcutil.get_titv(adj_ref,adj_alt)
-                    subst = qcutil.get_substitution(adj_ref,adj_alt)
+                    # subst = qcutil.get_substitution(adj_ref,adj_alt)  ### use the following line for temporary.
+                    subst = qcutil.get_substitution(adj_ref,adj_alt.split(',')[0])
                     stat['TITV'][titv + vt] += 1
                     stat['HETHOM'][homhet + vt] += 1 
                     stat['SUBSTITUTION'][subst + vt] += 1
@@ -148,8 +148,6 @@ class QCBoardVCFSTAT():
 
                 if ii % 500000 == 0:
                     print (ii, 'chr'+chrom, pos)
-                    # break
-                # break
         
         self.qcstat = stat
         self.cal_qcstat()
@@ -196,7 +194,10 @@ class QCBoardVCFSTAT():
 
             for subst in list(stat['SUBSTITUTION'].keys()):
                 if (vt == '' and not '_PASS' in subst) or (vt == '_PASS' and '_PASS' in subst):
-                    stat['SUBSTITUTION'][subst+'_PER'] = round(stat['SUBSTITUTION'][subst] / sumsubst * 100,2)
+                    if sumsubst > 0:
+                        stat['SUBSTITUTION'][subst+'_PER'] = round(stat['SUBSTITUTION'][subst] / sumsubst * 100,2)
+                    else:
+                        stat['SUBSTITUTION'][subst+'_PER'] = 0
 
             if 'DNDS' in stat.keys():
                 stat['DNDS']['DNDS'+vt] = round(stat['DNDS']['DN'+vt] / stat['DNDS']['DS'+vt],5)

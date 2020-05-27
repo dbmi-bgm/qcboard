@@ -6,10 +6,16 @@ import conf
 
 UNITREADLINE = 20000
 
+MENDELSTAT_DEFAULT_FIELD = ['N','MENDEL_ERROR','DENOVO','MENDEL_INHERITANCE']
+VARTYPE_LIST = ['ALL','SNV', 'INS','DEL', 'MNV', 'MIXED']
+
 class QCBoardFamilyVCFSTAT():
     def __init__(self, opt):
+        self.relation = []
+        self.sample_relation_map = {}
+        self.relation_sample_map = {}
         self.opt = opt
-        self.vcflist = self.opt['vcflist']
+        self.vcflist = self.opt['vcf']
         self.set_outfilenames()
         self.qcstat = self.init_qcstat()
 
@@ -30,97 +36,135 @@ class QCBoardFamilyVCFSTAT():
                 stat[k1][k2+'_PASS'] = 0
         return stat
 
-    def get_read_block_vcf(self, fp, tchrom, tpos, max_read_line=0, flag_eof=False):
+    def get_read_block_from_one_vcf(self, fp, tchrom, tpos, max_read_line=0, flag_eof=False):
         blockvar = {}
         i = 0
         chrom = ''
         pos = 0
+        samplelist = []
+
         while True:
             line = fp.readline().decode('UTF-8')
+
             try:
-                tmp = line[0]
+                line[0]
             except IndexError:
-                break
                 flag_eof = True
-            if line[0] != '#':
+                break
+
+            if line[0] == '#':
+                if line[:len('#CHROM')] == '#CHROM':
+                    arr = line.strip().split('\t')
+                    samplelist = arr[9:]
+            else:
                 i += 1
                 arr = line.split('\t')
                 arr[-1] = arr[-1].strip()
-                chrom = arr[0].replace('chr','').replace('MT','M')
+                chrom = qcutil.convert_chrom(arr[0])
                 pos = int(arr[1])
+                chrompos = chrom + ':' + str(pos)
                 vqsr_filter = arr[conf.VCF_HEADCOL.index('FILTER')].strip()
                 ref = arr[conf.VCF_HEADCOL.index('REF')].strip()
                 alt = arr[conf.VCF_HEADCOL.index('ALT')].strip()
                 
-                k = 9
-                callinfo = arr[k].strip().split(':')
-                gt = callinfo[0]
-                
-                homhet = qcutil.get_homhet(gt)
-                (adj_ref, adj_alt, adj_gt) = qcutil.get_adjusted_refalt(ref,alt,gt)
-                vartype = qcutil.get_vartype(adj_ref,adj_alt)
+                for sidx in range(len(samplelist)):
+                    callinfo = arr[sidx+9].strip().split(':')
+                    gt = callinfo[0]
+                    
+                    homhet = qcutil.get_homhet(gt)
+                    (adj_ref, adj_alt, adj_gt) = qcutil.get_adjusted_refalt(ref,alt,gt)
+                    vartype = qcutil.get_vartype(adj_ref,adj_alt)
 
-                if vartype == "SNV":
+
                     d = {}
-                    d['geno'] = qcutil.get_genotype(adj_gt,adj_ref, adj_alt)
-                    # key1 = '_'.join([pos,adj_ref,adj_alt])
-                    # print (pos, adj_ref, adj_alt,ref, alt, geno)
+                    d['vartype'] = vartype
+                    d['numgt'] = gt.replace('|','/')
+                    d['geno'] = qcutil.get_genotype(adj_gt, adj_ref, adj_alt)  # useless
+                    
                     if vqsr_filter == "PASS":
                         d['vqsr'] = 'p'
                     else:
                         d['vqsr'] = ''
                     d['ref'] = ref
-                    blockvar[pos] = d
-                if not flag_eof:
-                    if max_read_line>0:
-                        if i > max_read_line:
-                            break
-                    else:
-                        if pos >= tpos or chrom != tchrom:
-                            break
+                    try:
+                        blockvar[samplelist[sidx]]
+                    except KeyError:
+                        blockvar[samplelist[sidx]] = {}
+                    blockvar[samplelist[sidx]][chrompos] = d
+
+                    if not flag_eof:
+                        if max_read_line>0:
+                            if i > max_read_line:
+                                break
+                        else:
+                            if pos >= tpos or chrom != tchrom:
+                                break
+
         if max_read_line>0:
             tpos = pos
             tchrom = chrom
-        return blockvar, tchrom, tpos, flag_eof
 
-    def cal_mendelstat_from_block(self, mstat, blockC, blockF, blockM):
-        for p1 in list(blockC.keys()):
-            bC = blockC[p1]
-            gC = bC['geno']
-            rr = bC['ref']+bC['ref']
+        
+        return blockvar, tchrom, tpos, flag_eof
+        
+
+    def cal_mendelstat_from_block(self, mstat, blockvar):
+        probandID = self.relation_sample_map['Proband']
+        fatherID = self.relation_sample_map['Father']
+        motherID = self.relation_sample_map['Mother']
+        for p1 in blockvar[probandID].keys():
+            bP = blockvar[probandID][p1]
+            vartype = bP['vartype']
+            gP = bP['numgt']
+            rr = "0/0"
             flag = True
             try:
-                gF = blockF[p1]['geno']
+                gF = blockvar[fatherID][p1]['numgt']
             except KeyError:
                 gF = rr
-                # flag = False
 
             try:
-                gM = blockM[p1]['geno']
+                gM = blockvar[motherID][p1]['numgt']
             except KeyError:
                 gM = rr
-                # flag = False
+
+            gPa = gP.split('/')
+            gFa = gF.split('/')
+            gMa = gM.split('/')
 
             if flag:
-                vt = ''
-                if bC['vqsr'] == "p":
-                    vt = '_PASS'
+                vfilter = ''
+                if bP['vqsr'] == "p":
+                    vfilter = '_PASS'
 
-                mstat['N'+vt] += 1
-                if gC != gF and gC != gM:
-                    if (gC[0] in gF and gC[1] in gM) or (gC[1] in gF and gC[0] in gM):
-                        pass
-                    else:
-                        mstat['MENDEL_ERROR'+vt] += 1
-                        if gF == rr and gM == rr:
-                            mstat['DENOVO'+vt] += 1
-                        # print (gC, gF, gM)
+                for vt in ['ALL_', vartype + '_']:
+                    mstat[vt + 'N'+vfilter] += 1
+                    flag_mendel_inheritance = True
+                    if gP != gF and gP != gM:
+                        if (gPa[0] in gFa and gPa[1] in gMa) or (gPa[1] in gFa and gPa[0] in gMa):
+                            pass
+                        else:
+                            flag_mendel_inheritance = False
+                            # print(p1, gP, gF, gM)
+                            mstat[vt + 'MENDEL_ERROR'+vfilter] += 1
+                            if gF == rr and gM == rr:
+                                mstat[vt + 'DENOVO'+vfilter] += 1
+                            # print (gP, gF, gM)
+                    if flag_mendel_inheritance:
+                        mstat[vt + 'MENDEL_INHERITANCE'+vfilter] += 1
         return mstat
+
+    def get_mendelstat_default(self):
+        global MENDELSTAT_DEFAULT_FIELD, VARTYPE_LIST
+        d = {}
+        for vt in VARTYPE_LIST:
+            for f1 in MENDELSTAT_DEFAULT_FIELD:
+                d[vt + '_' + f1] = 0
+        return d
 
     def load_vcflist(self):
         global UNITREADLINE
         stat = self.qcstat
-        # print (stat)
         
         flist = []
         for vcf in self.vcflist:
@@ -135,46 +179,52 @@ class QCBoardFamilyVCFSTAT():
         iblock = 0
         while True:
             iblock += 1
-            blockvar[self.pedmap['C']], tchrom, tpos, flag_eof = self.get_read_block_vcf(flist[self.pedmap['C']], tchrom,tpos, UNITREADLINE)
-            blockvar[self.pedmap['F']], tchrom, tpos, flag_eof = self.get_read_block_vcf(flist[self.pedmap['F']], tchrom,tpos, UNITREADLINE, flag_eof)
-            blockvar[self.pedmap['M']], tchrom, tpos, flag_eof = self.get_read_block_vcf(flist[self.pedmap['M']], tchrom,tpos, UNITREADLINE, flag_eof)
-            
-            mendelstat = qcutil.check_key(mendelstat, 'MENDEL',{'N':0,'MENDEL_ERROR':0,'DENOVO':0,'MENDEL_ERROR_RATIO':0.0,'DENOVO_RATIO':0.0})
-            mendelstat['MENDEL'] = self.cal_mendelstat_from_block(mendelstat['MENDEL'],blockvar[self.pedmap['C']], blockvar[self.pedmap['F']], blockvar[self.pedmap['M']])
-            print (iblock, len(blockvar[self.pedmap['C']].keys()), mendelstat, tchrom, tpos)
-            if iblock > 2000:
+            if len(flist) > 1:
+                # TODO: 
+                # blockvar, tchrom, tpos, flag_eof = self.get_read_block_from_multiple_vcf(flist, tchrom,tpos, UNITREADLINE)
                 pass
+            else:
+                blockvar, tchrom, tpos, flag_eof = self.get_read_block_from_one_vcf(flist[0], tchrom,tpos, UNITREADLINE, False)
+            mendelstat = qcutil.check_key(mendelstat, 'MENDEL',self.get_mendelstat_default())
+            mendelstat['MENDEL'] = self.cal_mendelstat_from_block(mendelstat['MENDEL'],blockvar)
+            if iblock > 2000 or flag_eof:
                 break
 
         self.qcstat = mendelstat
         self.cal_qcstat()
 
     def cal_qcstat(self):
+        global MENDELSTAT_DEFAULT_FIELD, VARTYPE_LIST
         stat = self.qcstat
-        print (stat)
-        # stat['QCBOARD']['NOSAMPLE'] = len(self.vcflist)
-        for vt in ['','_PASS']:
-            if stat['MENDEL']['N'+vt] == 0:
-                stat['MENDEL']['MENDEL_ERROR_RATIO'+vt] = 0
-                stat['MENDEL']['DENOVO_RATIO'+vt] = 0
-            else:
-                stat['MENDEL']['MENDEL_ERROR_RATIO'+vt] = round(stat['MENDEL']['MENDEL_ERROR'+vt] / stat['MENDEL']['N'+vt],4)
-                stat['MENDEL']['DENOVO_RATIO'+vt] = round(stat['MENDEL']['DENOVO'+vt] / stat['MENDEL']['N'+vt],4)
+        for vt in VARTYPE_LIST:
+            vt = vt + '_'
+            for f1 in MENDELSTAT_DEFAULT_FIELD:
+                for vfilter in ['','_PASS']:
+                    if stat['MENDEL'][vt + f1+vfilter] == 0:
+                        stat['MENDEL'][vt + f1 + vfilter + '_RATIO'] = 0.0
+                    else:
+                        stat['MENDEL'][vt + f1 + vfilter + '_RATIO'] = round(stat['MENDEL'][vt + f1+vfilter] / stat['MENDEL'][vt + 'N'+vfilter],4)
         self.qcstat = stat
 
     def save_stat(self):
-        qcutil.savejson(self.out_json, self.qcstat)
+        qcutil.savejson(self.out_json, self.qcstat, sort=True)
         print ('Saved '+self.out_json)
 
-    def load_ped(self):
-        pedlist = self.opt['ped'].strip().split(',')
-        self.pedmap = {'F':'','M':'','C':''}
-        for i in range(len(pedlist)):
-            ped = pedlist[i].strip()
-            if ped == 'F' or ped == 'M' or ped == 'C':
-                self.pedmap[ped]=i
-
-    def run(self):
-        self.load_ped()
+    def load_relation(self):
+        self.relation = qcutil.loadjson(self.opt['relation'])
+        for r1 in self.relation:
+            self.sample_relation_map[r1['sample']] = r1
+            try:
+                tmp = self.relation_sample_map[r1['relation']]
+                if type(tmp) == type([]):
+                    self.relation_sample_map[r1['relation']].append(r1['sample'])
+                else:
+                    self.relation_sample_map[r1['relation']]= [tmp, r1['sample']]
+            except KeyError:
+                self.relation_sample_map[r1['relation']] = r1['sample']
+        
+    def run(self, flag_save=True):
+        self.load_relation()
         self.load_vcflist()
-        self.save_stat()
+        if flag_save:
+            self.save_stat()

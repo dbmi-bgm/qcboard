@@ -133,25 +133,25 @@ class QCBoardBAM():
 
     def save_json(self):
         conv_dict = {
-        'SEQVERSION': 'Reference version',
-        'EST_GENDER': 'Estimated gender',
-        'COVERAGE_ALL_CHROM': 'Coverage all chromosomes',
-        'COVERAGE_MAIN_CHROM': 'Coverage main chromosomes',
-        'ADJUSTED_COVERAGE_MAIN_CHROM': 'Adjusted coverage main chromosomes',
-        'SEQUENCE_LENGTH': 'Sequence length',
-        'XY_RATIO': 'XY ratio',
-        'NO_UNMAPPED_READS':'Num unmapped reads',
-        'NO_MAPPED_READS': 'Num mapped reads',
-        'NO_PAIR': 'Num pairs',
-        'NO_PAIR_1': 'Num 1st of pair',
-        'NO_PAIR_2': 'Num 2nd of pair',
-        'MEDIAN_INSERT_SIZE': 'Median insertion size',
-        'MEDIAN_ABSOLUTE_DEVIATION': 'Median absolute deviation of insertion size distribution',
-        'MEAN_INSERT_SIZE': 'Mean insertion size',
-        'STANDARD_DEVIATION': 'Standard deviation of insertion size',
-        'MIN_INSERT_SIZE': 'Minimum insertion size',
-        'MAX_INSERT_SIZE': 'Maximum insertion size',
-        'MAPPED_RATIO': 'Mapped ratio'
+            'SEQVERSION': 'Reference version',
+            'EST_GENDER': 'Estimated gender',
+            'COVERAGE_ALL_CHROM': 'Coverage all chromosomes',
+            'COVERAGE_MAIN_CHROM': 'Coverage main chromosomes',
+            'ADJUSTED_COVERAGE_MAIN_CHROM': 'Adjusted coverage main chromosomes',
+            'SEQUENCE_LENGTH': 'Sequence length',
+            'XY_RATIO': 'XY ratio',
+            'NO_UNMAPPED_READS':'Num unmapped reads',
+            'NO_MAPPED_READS': 'Num mapped reads',
+            'NO_PAIR': 'Num pairs',
+            'NO_PAIR_1': 'Num 1st of pair',
+            'NO_PAIR_2': 'Num 2nd of pair',
+            'MEDIAN_INSERT_SIZE': 'Median insertion size',
+            'MEDIAN_ABSOLUTE_DEVIATION': 'Median absolute deviation of insertion size distribution',
+            'MEAN_INSERT_SIZE': 'Mean insertion size',
+            'STANDARD_DEVIATION': 'Standard deviation of insertion size',
+            'MIN_INSERT_SIZE': 'Minimum insertion size',
+            'MAX_INSERT_SIZE': 'Maximum insertion size',
+            'MAPPED_RATIO': 'Mapped ratio'
         }
         d = {}
         for key in self.qcstat:

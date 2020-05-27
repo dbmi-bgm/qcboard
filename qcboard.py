@@ -30,10 +30,10 @@ def get_options():
     p1.add_argument('-debug', dest='debug', action="store_true", default=False, help='turn on the debugging mode')
 
     p1 = subparsers.add_parser('vcfqc', help='quality check for VCF', description='quality check for VCF')
-    p1.add_argument('-vcf', dest='vcflist', default=[], help='VCF files', nargs="*")
+    p1.add_argument('-vcf', dest='vcf', default=[], help='VCF files', nargs="*")
     p1.add_argument('-out', dest='out', default='', help='title of output file')
     p1.add_argument('-temp', dest='temp', default='qcboard_vcfqc.html', help='template html file')
-    p1.add_argument('-ped', dest='ped', default='', help='title of output file')
+    p1.add_argument('-relation', dest='relation', default='', help='relationship file')
     p1.add_argument('-silence', dest='silence', action="store_true", default=False, help='don\'t print any log.')
     p1.add_argument('-debug', dest='debug', action="store_true", default=False, help='turn on the debugging mode')
 
@@ -44,14 +44,14 @@ def get_options():
     p1.add_argument('-debug', dest='debug', action="store_true", default=False, help='turn on the debugging mode')
 
     p1 = subparsers.add_parser('vcfstat', help='quality metrics for VCF', description='quality metrics for VCF')
-    p1.add_argument('-vcf', dest='vcflist', default=[], help='VCF files', nargs="*")
+    p1.add_argument('-vcf', dest='vcf', default=[], help='VCF files', nargs="*")
     p1.add_argument('-out', dest='out', default='', help='title of output file')
-    p1.add_argument('-ped', dest='ped', default='', help='title of output file')
+    p1.add_argument('-relation', dest='relation', default='', help='relationship file')
     p1.add_argument('-silence', dest='silence', action="store_true", default=False, help='don\'t print any log.')
     p1.add_argument('-debug', dest='debug', action="store_true", default=False, help='turn on the debugging mode')
 
     # p1 = subparsers.add_parser('famvcfstat', help='quality metrics for family VCF', description='quality metrics for VCF')
-    # p1.add_argument('-vcf', dest='vcflist', default=[], help='VCF files', nargs="*")
+    # p1.add_argument('-vcf', dest='vcf', default=[], help='VCF files', nargs="*")
     # p1.add_argument('-out', dest='out', default='', help='title of output file')
     # p1.add_argument('-ped', dest='ped', default='', help='title of output file')
     # p1.add_argument('-silence', dest='silence', action="store_true", default=False, help='don\'t print any log.')
@@ -62,24 +62,27 @@ def get_options():
     opt = vars(parser.parse_args())
     return opt
 
-def cli():
-    opt = get_options()
-    # print (opt)
+
+def run_with_option(opt):
     if opt['subcommand']=='bamqc' and 'bam' in opt.keys() and opt['bam'] != "":
         qcb = bamqc.QCBoardBAM(opt)
         qcb.run()
-    if opt['subcommand']=='vcfqc' and 'vcflist' in opt.keys() and opt['vcflist'] != []:
+    if opt['subcommand']=='vcfqc' and 'vcf' in opt.keys() and opt['vcf'] != []:
         qcb = vcfqc.QCBoardVCF(opt)
         qcb.run()
-    if opt['subcommand']=='vcfstat' and 'vcflist' in opt.keys() and opt['vcflist'] != []:
-        if opt['ped'] == "":
-            for vcf in opt['vcflist']:
-                opt['vcf'] = vcf
-                qcb = vcfstat.QCBoardVCFSTAT(opt)
-                qcb.run()
+    if opt['subcommand']=='vcfstat' and 'vcf' in opt.keys() and opt['vcf'] != []:
+        if opt['relation'] == "":
+            opt['vcf'] = vcf
+            qcb = vcfstat.QCBoardVCFSTAT(opt)
+            qcb.run()
         else:
             qcb = famvcfstat.QCBoardFamilyVCFSTAT(opt)
             qcb.run()
+
+def cli():
+    opt = get_options()
+    run_with_option(opt)
+
 
 if __name__ == "__main__":
     # print ("#USAGE: python qcboard.py -bam [BAM FILE] -out [OUTPUT TITLE]")
